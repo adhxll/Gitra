@@ -40,7 +40,7 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
         }
     }
     
-    //Detect status changes
+    // Detect status changes
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "text" {
             if (change?[.oldKey] as! String) != (change?[.newKey] as! String) {
@@ -90,8 +90,7 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
     }
     
     @IBAction func goToSetting(_ sender: Any) {
-        let pvc = UIStoryboard(name: "Setting", bundle: nil)
-        let settingVC = pvc.instantiateViewController(withIdentifier: "setting")
+        let settingVC = SettingViewController(settingVM: SettingViewModel())
         self.navigationController?.pushViewController(settingVC, animated: true)
     }
     
@@ -143,10 +142,10 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
         let frame = self.view.frame.width / 2
         var position = CGPoint()
         
-        //Update highlight button to match the string target
+        // Update highlight button to match the string target
         updateButton(target: target)
         
-        if abs(freqGap) < errorDiff { //Target note is pretty close
+        if abs(freqGap) < errorDiff { // Target note is pretty close
             let mappedPos = map(minRange: Int(target - errorDiff), maxRange: Int(target + errorDiff), minDomain: Int(-frame), maxDomain: Int(frame), value: Int(pitch))
             position = CGPoint(x: mappedPos, y: 0)
             
@@ -165,7 +164,7 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
                 
                 indicatorCircle?.fillColor = UIColor.ColorLibrary.yellowAccent.cgColor
             }
-        } else { //Target note is much lower or larger
+        } else { // Target note is much lower or larger
 
             indicatorCircle?.fillColor = UIColor.ColorLibrary.orangeAccent.cgColor
             position = freqGap > 0 ? CGPoint(x: frame, y: 0) : CGPoint(x: -frame, y: 0)
@@ -176,7 +175,7 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
             }
         }
         
-        let diff = (round(100*freqGap))/100
+        let diff = (round(100 * freqGap)) / 100
         differenceLabel.text = "\(diff)"
         indicatorCircle?.position = position
         
@@ -214,8 +213,8 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
     }
     
     func setDefaultButton() {
-        //Set button color on the stack view
-        strings.forEach({$0.backgroundColor = .ColorLibrary.whiteAccent})
+        // Set button color on the stack view
+        strings.forEach({ $0.backgroundColor = .ColorLibrary.whiteAccent })
     }
     
     func startTimer() {

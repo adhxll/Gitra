@@ -14,11 +14,11 @@ import Combine
 class ChordVoiceViewModel {
     //Audio
     private var player: AVAudioPlayer?
-    private let audioEngine = AVAudioEngine()
+    private var audioEngine = AVAudioEngine()
     private var request = SFSpeechAudioBufferRecognitionRequest()
     private var task: SFSpeechRecognitionTask!
-    private let speechSynthesizer = AVSpeechSynthesizer()
-    private let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer()
+    private var speechSynthesizer = AVSpeechSynthesizer()
+    private var speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer()
     
     //Timer
     var timer: Timer?
@@ -29,6 +29,9 @@ class ChordVoiceViewModel {
     @Published var alertMessage = ""
     @Published var isRecognizingSpeech = false
     
+    deinit {
+        killAudioEngine()
+    }
     
     func utter(text: String){
         let speechUtterance = AVSpeechUtterance(string: text)
@@ -97,9 +100,7 @@ class ChordVoiceViewModel {
                 }
             }
         }
-        request.endAudio()
-        audioEngine.stop()
-        audioEngine.inputNode.removeTap(onBus: 0)
+        killAudioEngine()
     }
     
     func activateSpeechRecognition(utter text:String) {
@@ -167,5 +168,11 @@ class ChordVoiceViewModel {
         }
     }
     
+    func killAudioEngine() {
+//        isRecognizingSpeech = false
+        request.endAudio()
+        audioEngine.stop()
+        audioEngine.inputNode.removeTap(onBus: 0)
+    }
     
 }

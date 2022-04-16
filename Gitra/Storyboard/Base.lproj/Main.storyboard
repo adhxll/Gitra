@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Pda-ug-Djw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Pda-ug-Djw">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -17,10 +17,10 @@
         </array>
     </customFonts>
     <scenes>
-        <!--On Boarding Animation-->
+        <!--Onboarding View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="onboarding" id="BYZ-38-t0r" customClass="OnBoardingAnimation" customModule="Gitra" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="onboarding" id="BYZ-38-t0r" customClass="OnboardingViewController" customModule="Gitra" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -82,7 +82,7 @@
                                     <color key="titleColor" name="Black Background"/>
                                 </state>
                                 <connections>
-                                    <action selector="buttonDidTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lYE-lD-6L5"/>
+                                    <action selector="buttonDidTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="AEc-Di-E3k"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -112,11 +112,11 @@
                     </view>
                     <navigationItem key="navigationItem" id="Lhz-5h-k3K"/>
                     <connections>
-                        <outlet property="proceedBtn" destination="l90-Ra-tUJ" id="lhV-pA-9Dd"/>
-                        <outlet property="sentence1" destination="gBM-GV-IHz" id="q13-0A-mWR"/>
-                        <outlet property="sentence2" destination="PUm-su-WUh" id="zYa-vV-ONR"/>
-                        <outlet property="sentence3" destination="LgZ-1D-FGK" id="hvv-eg-gh3"/>
-                        <outlet property="welcome" destination="Ki7-0D-bbx" id="wBo-Xy-mfL"/>
+                        <outlet property="proceedBtn" destination="l90-Ra-tUJ" id="V0L-lK-8Ra"/>
+                        <outlet property="sentence1" destination="gBM-GV-IHz" id="tgS-Qr-IpT"/>
+                        <outlet property="sentence2" destination="PUm-su-WUh" id="qPu-Fy-VgM"/>
+                        <outlet property="sentence3" destination="LgZ-1D-FGK" id="NDS-tL-Akt"/>
+                        <outlet property="welcome" destination="Ki7-0D-bbx" id="9oU-Ey-Tz9"/>
                         <segue destination="rbQ-Fl-PZ3" kind="presentation" identifier="seguetochord" modalPresentationStyle="fullScreen" id="fvN-w3-VBG"/>
                     </connections>
                 </viewController>
@@ -148,7 +148,7 @@
         <scene sceneID="2HD-ij-sZU">
             <objects>
                 <viewController id="Pda-ug-Djw" customClass="SelectorViewController" customModule="Gitra" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="fce-Cf-wt3">
+                    <view key="view" contentMode="scaleToFill" id="fce-Cf-wt3" customClass="Sel">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="x5K-kj-lFz"/>

@@ -35,6 +35,7 @@ class ChordPickerViewController: UIViewController {
         super.viewDidLoad()
         self.tabBarController?.tabBar.isHidden = false
         self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.extendedLayoutIncludesOpaqueBars = true
 
         chordPicker.dataSource = self
         chordPicker.delegate = self

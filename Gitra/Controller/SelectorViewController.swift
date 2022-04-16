@@ -2,7 +2,7 @@
 //  SelectorViewController.swift
 //  Gitra
 //
-//  Created by Yahya Ayyash on 17/06/21.
+//  Created by Adhella Subalie on 16/04/22.
 //
 
 import UIKit
@@ -16,7 +16,11 @@ class SelectorViewController: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        
+        initializeUserDefaults()
+        navigateToPreferedPage()
+    }
+    
+    func initializeUserDefaults() {
         if OnboardingHandler.shared.isFirstLaunch {
             defaults.set(0, forKey: "inputMode")
             defaults.set(1, forKey: "welcomeScreen")
@@ -24,7 +28,9 @@ class SelectorViewController: UIViewController {
             defaults.set(1, forKey: "chordSpeed")
             OnboardingHandler.shared.isFirstLaunch = true
         }
-        
+    }
+    
+    func navigateToPreferedPage() {
         let value = defaults.integer(forKey: "welcomeScreen")
         if (value == 0) {
             performSegue(withIdentifier: "skipOnboarding", sender: nil)

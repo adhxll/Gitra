@@ -1,17 +1,18 @@
 //
-//  OnBoardingAnimation.swift
+//  OnboardingViewController.swift
 //  Gitra
 //
-//  Created by Samuel Maynard on 08/06/21.
+//  Created by Adhella Subalie on 16/04/22.
 //
+
+import Foundation
 
 import UIKit
 import AVFoundation
 
-class OnBoardingAnimation: UIViewController{
+class OnboardingViewController: UIViewController{
     
     @IBOutlet weak var welcome: UILabel!
-    
     @IBOutlet weak var sentence1 : UILabel!
     @IBOutlet weak var sentence2 : UILabel!
     @IBOutlet weak var sentence3 : UILabel!

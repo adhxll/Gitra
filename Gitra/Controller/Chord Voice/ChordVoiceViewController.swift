@@ -13,7 +13,7 @@ import Combine
 
 class ChordVoiceViewController: UIViewController {
     
-    let viewModel = ChordVoiceViewModel()
+    var viewModel = ChordVoiceViewModel()
     
     @IBOutlet weak var textLogo: UIImageView!
     @IBOutlet weak var imageTap: UIImageView!
@@ -54,7 +54,8 @@ class ChordVoiceViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        viewModel.deactivateSpeechRecognitization()
+        viewModel.killAudioEngine()
+        hideAnimation()
     }
     
     func initializeSubscribers(){
@@ -85,7 +86,7 @@ class ChordVoiceViewController: UIViewController {
     func initializeInherentProperties() {
         UINavigationBar.appearance().isTranslucent = true
         navigationController?.navigationBar.shadowImage = UIImage()
-        self.extendedLayoutIncludesOpaqueBars = false
+        self.extendedLayoutIncludesOpaqueBars = true
         self.tabBarController?.tabBar.isHidden = false
         //        checkDefault()
     }

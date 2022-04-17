@@ -7,7 +7,27 @@
 
 import Foundation
 
-struct ChordQuality {
-    var quality : String?
-    var tension : [String]?
+protocol ChordFormatProtocol {
+    var value: String { get set }
+    var accessibility: String { get set }
+    var apiFormat: String { get set }
+}
+
+struct ChordBase: ChordFormatProtocol {
+    var value: String = ""
+    var accessibility: String = ""
+    var apiFormat: String = ""
+}
+
+struct ChordQuality: ChordFormatProtocol {
+    var value: String
+    var accessibility: String
+    var apiFormat: String
+    var tension : [ChordTension]
+}
+
+struct ChordTension: ChordFormatProtocol {
+    var value: String
+    var accessibility: String
+    var apiFormat: String
 }

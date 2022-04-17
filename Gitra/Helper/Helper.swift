@@ -196,21 +196,6 @@ extension String {
     }
 }
 
-extension Array {
-    func stringToBullets() -> NSAttributedString {
-        let strArr = self.map( { "\($0)" })
-        let joiner = "\n"
-        
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.headIndent = 15
-        paragraphStyle.firstLineHeadIndent = 0
-        
-        let attributes = [NSAttributedString.Key.paragraphStyle: paragraphStyle]
-        let bulletListString = strArr.joined(separator: joiner)
-        return NSAttributedString(string: bulletListString, attributes: attributes)
-    }
-}
-
 extension Bundle {
     public var appName: String { getInfo("CFBundleName") }
     public var displayName: String { getInfo("CFBundleDisplayName") }

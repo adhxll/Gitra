@@ -20,7 +20,6 @@
 		522785E8266E5D6B005BF33E /* ChordVoiceChord.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 522785E7266E5D6B005BF33E /* ChordVoiceChord.storyboard */; };
 		522785EB266E5D77005BF33E /* ChordVoiceTuner.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 522785EA266E5D77005BF33E /* ChordVoiceTuner.storyboard */; };
 		522785F6266E5F0C005BF33E /* ChordVoiceTunerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522785F5266E5F0C005BF33E /* ChordVoiceTunerViewController.swift */; };
-		522785FA266E5F36005BF33E /* ChordPickerTunerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522785F9266E5F36005BF33E /* ChordPickerTunerViewController.swift */; };
 		52698D0E266DE9D5004F7AD6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52698D0D266DE9D5004F7AD6 /* AppDelegate.swift */; };
 		52698D10266DE9D5004F7AD6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52698D0F266DE9D5004F7AD6 /* SceneDelegate.swift */; };
 		52698D15266DE9D5004F7AD6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52698D13266DE9D5004F7AD6 /* Main.storyboard */; };
@@ -34,6 +33,9 @@
 		52EE72ED26726B2100B3E7EE /* SoundHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52EE72EC26726B2100B3E7EE /* SoundHelper.swift */; };
 		745F5CCD280A21FE00F254B6 /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745F5CCC280A21FE00F254B6 /* SettingTableViewCell.swift */; };
 		745F5CCF280A7C7200F254B6 /* CustomSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745F5CCE280A7C7200F254B6 /* CustomSwitch.swift */; };
+		7485AE08280A93F20017FA45 /* AutomaticTunerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7485AE07280A93F20017FA45 /* AutomaticTunerViewModel.swift */; };
+		7485AE0A280A941E0017FA45 /* ChordPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7485AE09280A941E0017FA45 /* ChordPickerViewModel.swift */; };
+		7485AE0C280A987E0017FA45 /* ChordPickerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7485AE0B280A987E0017FA45 /* ChordPickerHelper.swift */; };
 		79C7DC9F2673B224006D4104 /* SettingsDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C7DC9E2673B224006D4104 /* SettingsDatabase.swift */; };
 		7CC7CDD7266F491F001C0C9C /* OnBoardingAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7CDD6266F491F001C0C9C /* OnBoardingAnimation.swift */; };
 		9028B9BC267E286600A14BAC /* loading-animation-2.json in Resources */ = {isa = PBXBuildFile; fileRef = 9028B9BA267E286600A14BAC /* loading-animation-2.json */; };
@@ -128,7 +130,6 @@
 		522785E7266E5D6B005BF33E /* ChordVoiceChord.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChordVoiceChord.storyboard; sourceTree = "<group>"; };
 		522785EA266E5D77005BF33E /* ChordVoiceTuner.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChordVoiceTuner.storyboard; sourceTree = "<group>"; };
 		522785F5266E5F0C005BF33E /* ChordVoiceTunerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordVoiceTunerViewController.swift; sourceTree = "<group>"; };
-		522785F9266E5F36005BF33E /* ChordPickerTunerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordPickerTunerViewController.swift; sourceTree = "<group>"; };
 		52698D0A266DE9D5004F7AD6 /* Gitra.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gitra.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52698D0D266DE9D5004F7AD6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		52698D0F266DE9D5004F7AD6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -143,6 +144,9 @@
 		52EE72EC26726B2100B3E7EE /* SoundHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundHelper.swift; sourceTree = "<group>"; };
 		745F5CCC280A21FE00F254B6 /* SettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewCell.swift; sourceTree = "<group>"; };
 		745F5CCE280A7C7200F254B6 /* CustomSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSwitch.swift; sourceTree = "<group>"; };
+		7485AE07280A93F20017FA45 /* AutomaticTunerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomaticTunerViewModel.swift; sourceTree = "<group>"; };
+		7485AE09280A941E0017FA45 /* ChordPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordPickerViewModel.swift; sourceTree = "<group>"; };
+		7485AE0B280A987E0017FA45 /* ChordPickerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordPickerHelper.swift; sourceTree = "<group>"; };
 		79C7DC9E2673B224006D4104 /* SettingsDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDatabase.swift; sourceTree = "<group>"; };
 		7CC7CDD6266F491F001C0C9C /* OnBoardingAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingAnimation.swift; sourceTree = "<group>"; };
 		9028B9BA267E286600A14BAC /* loading-animation-2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "loading-animation-2.json"; sourceTree = "<group>"; };
@@ -367,7 +371,8 @@
 			isa = PBXGroup;
 			children = (
 				522785D0266E5B04005BF33E /* ChordPickerViewController.swift */,
-				522785F9266E5F36005BF33E /* ChordPickerTunerViewController.swift */,
+				7485AE09280A941E0017FA45 /* ChordPickerViewModel.swift */,
+				7485AE0B280A987E0017FA45 /* ChordPickerHelper.swift */,
 			);
 			path = "Chord Picker";
 			sourceTree = "<group>";
@@ -513,6 +518,7 @@
 			isa = PBXGroup;
 			children = (
 				90CD999E267610F000464E25 /* AutomaticTunerViewController.swift */,
+				7485AE07280A93F20017FA45 /* AutomaticTunerViewModel.swift */,
 			);
 			path = Tuner;
 			sourceTree = "<group>";
@@ -696,21 +702,23 @@
 				745F5CCD280A21FE00F254B6 /* SettingTableViewCell.swift in Sources */,
 				745F5CCF280A7C7200F254B6 /* CustomSwitch.swift in Sources */,
 				7CC7CDD7266F491F001C0C9C /* OnBoardingAnimation.swift in Sources */,
+				7485AE0A280A941E0017FA45 /* ChordPickerViewModel.swift in Sources */,
 				D8355D752677925C00F2D718 /* FingerIndicator.swift in Sources */,
 				90799B65267A7D3D0050B25C /* OnboardingHandler.swift in Sources */,
 				522785D4266E5B0D005BF33E /* ChordDetailViewController.swift in Sources */,
 				79C7DC9F2673B224006D4104 /* SettingsDatabase.swift in Sources */,
+				7485AE08280A93F20017FA45 /* AutomaticTunerViewModel.swift in Sources */,
 				BD9EE8BA266E46C90081B951 /* GradientView.swift in Sources */,
 				52EE72E226724D5500B3E7EE /* Helper.swift in Sources */,
 				90B0163D2671085A0054ED9D /* ChordQuality.swift in Sources */,
 				52698D0E266DE9D5004F7AD6 /* AppDelegate.swift in Sources */,
 				5293C813266F339100151BF7 /* ChordResponse.swift in Sources */,
-				522785FA266E5F36005BF33E /* ChordPickerTunerViewController.swift in Sources */,
 				522785F6266E5F0C005BF33E /* ChordVoiceTunerViewController.swift in Sources */,
 				90BF406227FBE30500ED53E3 /* SettingMenuViewModel.swift in Sources */,
 				90766B05267A67D000FFA576 /* SelectorViewController.swift in Sources */,
 				52EE72ED26726B2100B3E7EE /* SoundHelper.swift in Sources */,
 				5293C816266F346E00151BF7 /* ChordModel.swift in Sources */,
+				7485AE0C280A987E0017FA45 /* ChordPickerHelper.swift in Sources */,
 				BDE09EDD267721D0007E0878 /* RoundedButton.swift in Sources */,
 				90B0163F26710C490054ED9D /* Database.swift in Sources */,
 				52698D10266DE9D5004F7AD6 /* SceneDelegate.swift in Sources */,

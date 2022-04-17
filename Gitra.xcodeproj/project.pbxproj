@@ -33,6 +33,7 @@
 		52EE72E226724D5500B3E7EE /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52EE72E126724D5500B3E7EE /* Helper.swift */; };
 		52EE72ED26726B2100B3E7EE /* SoundHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52EE72EC26726B2100B3E7EE /* SoundHelper.swift */; };
 		79C7DC9F2673B224006D4104 /* SettingsDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C7DC9E2673B224006D4104 /* SettingsDatabase.swift */; };
+		7C866EF5280493730036BEFE /* ChordDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C866EF4280493730036BEFE /* ChordDetailViewModel.swift */; };
 		7CC7CDD7266F491F001C0C9C /* OnBoardingAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7CDD6266F491F001C0C9C /* OnBoardingAnimation.swift */; };
 		9028B9BC267E286600A14BAC /* loading-animation-2.json in Resources */ = {isa = PBXBuildFile; fileRef = 9028B9BA267E286600A14BAC /* loading-animation-2.json */; };
 		9028B9BD267E286600A14BAC /* loading-animation-1.json in Resources */ = {isa = PBXBuildFile; fileRef = 9028B9BB267E286600A14BAC /* loading-animation-1.json */; };
@@ -143,6 +144,7 @@
 		52EE72E126724D5500B3E7EE /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		52EE72EC26726B2100B3E7EE /* SoundHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundHelper.swift; sourceTree = "<group>"; };
 		79C7DC9E2673B224006D4104 /* SettingsDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDatabase.swift; sourceTree = "<group>"; };
+		7C866EF4280493730036BEFE /* ChordDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordDetailViewModel.swift; sourceTree = "<group>"; };
 		7CC7CDD6266F491F001C0C9C /* OnBoardingAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingAnimation.swift; sourceTree = "<group>"; };
 		9028B9BA267E286600A14BAC /* loading-animation-2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "loading-animation-2.json"; sourceTree = "<group>"; };
 		9028B9BB267E286600A14BAC /* loading-animation-1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "loading-animation-1.json"; sourceTree = "<group>"; };
@@ -378,6 +380,7 @@
 			isa = PBXGroup;
 			children = (
 				522785D3266E5B0D005BF33E /* ChordDetailViewController.swift */,
+				7C866EF4280493730036BEFE /* ChordDetailViewModel.swift */,
 			);
 			path = "Chord Detail";
 			sourceTree = "<group>";
@@ -687,6 +690,7 @@
 				90799B65267A7D3D0050B25C /* OnboardingHandler.swift in Sources */,
 				522785D4266E5B0D005BF33E /* ChordDetailViewController.swift in Sources */,
 				79C7DC9F2673B224006D4104 /* SettingsDatabase.swift in Sources */,
+				7C866EF5280493730036BEFE /* ChordDetailViewModel.swift in Sources */,
 				BD9EE8BA266E46C90081B951 /* GradientView.swift in Sources */,
 				52EE72E226724D5500B3E7EE /* Helper.swift in Sources */,
 				90B0163D2671085A0054ED9D /* ChordQuality.swift in Sources */,

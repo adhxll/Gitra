@@ -10,8 +10,11 @@ import Speech
 import AVFoundation
 import Lottie
 import Foundation
+import Combine
 
 class ChordDetailViewController: UIViewController {
+    
+    let viewModel = ChordDetailViewModel()
     
     @IBOutlet var fretImage:UIImageView!
     @IBOutlet var startFret:UILabel!
@@ -36,11 +39,6 @@ class ChordDetailViewController: UIViewController {
     
     let animationView = AnimationView()
     
-    let audioEngine = AVAudioEngine()
-    let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer()
-    var request = SFSpeechAudioBufferRecognitionRequest()
-    var task: SFSpeechRecognitionTask!
-    
     var workItemSpeech: DispatchWorkItem?
     var workItemCommand: DispatchWorkItem?
     var workItemRecognizer: DispatchWorkItem?
@@ -50,22 +48,86 @@ class ChordDetailViewController: UIViewController {
     //Audio
     var player: AVAudioPlayer?
     
-    //Timer
-    var timer: Timer?
-    
     let speechSynthesizer = AVSpeechSynthesizer()
-    
     let speaker = Speaker()
-    
-    var countFinger = 0
-    var strings = [0,0,0,0,0,0] //0 is open and -1 is dead
-    var fingering = [0,0,0,0,0,0] //-1 means no fingers are there
-    var labelForAccessibility = ["","","","","",""]
-    var startingFret = 100 //initialize max value to compare
     var indicators:[FingerIndicator] = []
     
-    var countFail:Int = 0
+    var countFail = 0
     var goToSetting: Bool = false
+    
+    //Subscriber
+    var alertMessageSubscriber: AnyCancellable?
+    var taskSubscriber: AnyCancellable?
+    var lblCommandTextLowerCasedSubscriber: AnyCancellable?
+    
+    //Initialize Subscriber
+    func initializeSubscriber(){
+        alertMessageSubscriber = viewModel.$alertMessage.sink(receiveValue: { message in
+            if(message != ""){ self.alertView(message: message) }
+        })
+        taskSubscriber = viewModel.$task.sink(receiveValue: { result in
+            if (result == nil) {
+                print("Task = nil")
+                //self.hideAnimation()
+            }
+        })
+        lblCommandTextLowerCasedSubscriber = viewModel.$lblCommandTextLowerCased.sink(receiveValue: { lowerCased in
+            self.lblCommand.text = lowerCased
+            if (lowerCased == "next") {
+                self.countFail = 0
+                if self.currString < 5 {
+                    self.changeString(isNext: 1)
+                    self.speakInstruction()
+                } else {
+                    self.finish()
+                }
+            // print("Next bawah")
+            } else if ( lowerCased == "previous") {
+                self.countFail = 0
+                self.changeString(isNext: 2)
+                self.speakInstruction()
+            } else if ( lowerCased == "repeat") {
+                self.countFail = 0
+                self.changeString(isNext: 3)
+                self.speakInstruction()
+            } else if ( lowerCased == "finish") {
+                self.countFail = 0
+                self.viewModel.request.endAudio()
+                self.viewModel.audioEngine.stop()
+                self.viewModel.audioEngine.inputNode.removeTap(onBus: 0)
+                self.finish()
+                
+            } else if ( lowerCased == "start over") {
+                self.currString = -1
+                self.changeString(isNext: 1)
+                self.speakInstruction()
+                self.countFail = 0
+            } else if ( lowerCased == "") { print("Lowercased first initialization") }
+            
+            else {
+                //If the word is not match from the constraint above
+                //Sound Feedback On
+                if ( self.countFail < 2) {
+                    print("LowerCased message : \(lowerCased)")
+                    self.speaker.speak("Voice feedback is not available, please Input your voice again", playNote: "")
+                    self.countFail = self.countFail + 1
+                    
+                    self.viewModel.timer = Timer.scheduledTimer(withTimeInterval: 4, repeats: false, block: { (timer) in
+                        // Do whatever needs to be done when the timer expires
+                        self.speechRecognitionActive()
+                        self.lblCommand.text = "Listening..."
+                        
+                    })
+                    print(self.countFail)
+                } else {
+                    self.speaker.speak("Please use the button instead", playNote: "")
+                    self.lblCommand.text = "Listening..."
+                    self.destroySpeakRecognition()
+                }
+            }
+            //self.destroySpeakRecognition()
+        })
+    }
     
     //MARK: - View Updates
     
@@ -94,24 +156,22 @@ class ChordDetailViewController: UIViewController {
                 return
             }
             
-            self.translateToCoordinate(chord: chordModel!)
+            initializeSubscriber()
+            
+            viewModel.translateToCoordinate(chord: chordModel!)
             self.displayIndicators()
-            self.generateStringForLabel()
+            viewModel.generateStringForLabel()
             
             UIView.animate(withDuration: 0.5) {
                 self.setAlpha(isHide: false)
             }
-            
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                playChord(strings)
+                self.playChord(self.viewModel.strings)
             }
-            
-            changeString(isNext: 1)
-            
+            self.changeString(isNext: 1)
             let delay: DispatchTime = .now() + (6 * chordDelay) + 0.5
-            
             DispatchQueue.main.asyncAfter(deadline: delay){
-                speakInstruction()
+                self.speakInstruction()
             }
             
             animationView.stop()
@@ -137,6 +197,7 @@ class ChordDetailViewController: UIViewController {
     //open or dead
     var currString = -1
     func changeString(isNext: Int){
+        let accessibilityLabel = viewModel.labelForAccessibility
         var prev = 0
         if currString - 1 >= 0 {
             prev = indicators.count - currString - 1
@@ -161,7 +222,7 @@ class ChordDetailViewController: UIViewController {
             
         }
         
-        instructionLabel.text = labelForAccessibility[currString]
+        instructionLabel.text = accessibilityLabel[currString]
         let imageName = "FretsGlow-" + String(currString + 1)
         fretImage.image = UIImage(named: imageName)
         indicators[indicators.count - 1 - currString].backgroundColor = UIColor.ColorLibrary.orangeAccent
@@ -170,63 +231,11 @@ class ChordDetailViewController: UIViewController {
         
     }
     
-    func generateStringForLabel(){ //Jari, Senar, Fret
-        var j = 5
-        for i in (0...5){
-            labelForAccessibility[i] = guitarString((i+1)) + " String, "
-            if strings[j] == -1{
-                labelForAccessibility[i] += "muted."
-            }
-            else{
-                if strings[j] == 0{
-                    labelForAccessibility[i] += "open string. "
-                }
-                else if strings[j] > 0{
-                    labelForAccessibility[i] += guitarFingering((fingering[j])) + " on "
-                    labelForAccessibility[i] += "fret " + String(strings[j]) + ". "
-                }
-            }
-            j-=1
-            
-        }
-    }
-    
-    //function to translate the strings from API into arrays (the 'strings' and 'fingering' array
-    //it also determine the starting fret and how many indicator(s) are present in the diagram
-    func translateToCoordinate(chord:ChordModel){
-        guard let s = chord.strings else {return}
-        let stringsComponents = s.split{ $0.isWhitespace }.map { String($0) }
-        guard let f = chord.fingering else {return}
-        let fingeringComponents = f.split{ $0.isWhitespace }.map { String($0) }
-        
-        for i in 0..<stringsComponents.count{
-            if stringsComponents[i] != "X"{
-                let fret = Int(stringsComponents[i])!
-                
-                strings[i] = fret
-                if(fret < startingFret && fret > 0){ //this determines the starting point by assesing the minimal fret value
-                    startingFret = fret
-                }
-                if(fret>0){ //counting which indicator is going to be present
-                    countFinger += 1
-                }
-            }else{ //if the component is X
-                strings[i] = -1
-            }
-            
-            if fingeringComponents[i] != "X"{
-                fingering[i] = Int(fingeringComponents[i])!
-            }else{ //if the component is X
-                fingering[i] = -1
-            }
-        }
-        
-        if startingFret <= 2{
-            startingFret = 1
-        }
-    }
-    
     func displayIndicators(){
+        let strings = viewModel.strings
+        let fingering = viewModel.fingering
+        let startingFret = viewModel.startingFret
+        
         let fretWidth = fretImage.frame.width
         let fretHeight = fretImage.frame.height
         
@@ -271,183 +280,19 @@ class ChordDetailViewController: UIViewController {
         }
     }
     
-    func guitarFingering(_ finger: Int) -> String {
-        switch finger {
-        case 1 :
-            return "index finger"
-        case 2 :
-            return "middle finger"
-        case 3 :
-            return "ring finger"
-        case 4 :
-            return "pinky finger"
-        default:
-            return ""
-        }
-    }
-    
-    func guitarString(_ index: Int) -> String {
-        switch index {
-        case 1 :
-            return "1st"
-        case 2 :
-            return "2nd"
-        case 3 :
-            return "3rd"
-        default :
-            return "\(index)th"
-        }
-    }
-    
     //MARK: - Speech Recognition
     
     private func speechRecognitionActive() {
-        
         self.playSound()
         lottieAnimation(yPos: self.commandLabel.frame.maxY, show: true)
-        
-        let node = audioEngine.inputNode
-        let recordingFormat = node.outputFormat(forBus: 0)
-        
-        request = SFSpeechAudioBufferRecognitionRequest()
-        
-        guard request == request else {
-            fatalError("Unable to Create SFSpeech Object")
-        }
-        
-        node.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer, _) in
-            self.request.append(buffer)
-        }
-        
-        audioEngine.prepare()
-        
-        do {
-            try audioEngine.start()
-        } catch {
-            alertView(message: "Error Start Audio Listener")
-        }
-        
-        guard let myRecognization = SFSpeechRecognizer() else {
-            self.alertView(message: "Recognization is now allow on your local")
-            
-            return
-        }
-        
-        if !myRecognization.isAvailable {
-            self.alertView(message: "Recognization is not available")
-        }
-        
-        var isFinal = false
-        
-        task = speechRecognizer?.recognitionTask(with: request, resultHandler: { result, error in
-            if let result = result {
-                let resultCommand = result.bestTranscription.formattedString
-                // Should I compare the result here to see if it changed?
-                self.lblCommand.text = resultCommand
-                isFinal = result.isFinal
-                
-            }
-            
-            if isFinal {
-                
-            } else if error == nil {
-                self.timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { (timer) in
-                    // Do whatever needs to be done when the timer expires
-                    self.cancelSpeechRecognitization(resultCommand: self.lblCommand.text ?? "")
-                    
-                })
-            }
-        })
-        
-        if (task.isFinishing == true) {
-            let lowerCased = self.lblCommand.text!.lowercased()
-            
-            if (lowerCased == "next") {
-                print("Next")
-            }
-        }
-    }
-    
-    private func cancelSpeechRecognitization(resultCommand: String) {
-        
-        if ( task != nil) {
-            task.finish()
-            task.cancel()
-            task = nil
-            
-            self.hideAnimation()
-            
-            let lowerCased = resultCommand.lowercased()
-            
-            if (lowerCased == "next") {
-                countFail = 0
-                
-                if currString < 5 {
-                    changeString(isNext: 1)
-                    speakInstruction()
-                } else {
-                    finish()
-                }
-                
-                // print("Next bawah")
-            } else if ( lowerCased == "previous") {
-                countFail = 0
-                
-                changeString(isNext: 2)
-                speakInstruction()
-            } else if ( lowerCased == "repeat") {
-                countFail = 0
-                
-                changeString(isNext: 3)
-                speakInstruction()
-            } else if ( lowerCased == "finish") {
-                countFail = 0
-                
-                request.endAudio()
-                audioEngine.stop()
-                audioEngine.inputNode.removeTap(onBus: 0)
-                
-                finish()
-                
-            } else if ( lowerCased == "start over") {
-                currString = -1
-                changeString(isNext: 1)
-                speakInstruction()
-                countFail = 0
-            } else {
-                //If the word is not match from the constraint above
-                //Sound Feedback On
-                
-                if ( countFail < 2) {
-                    speaker.speak("Voice feedback is not available, please Input your voice again", playNote: "")
-                    countFail = countFail + 1
-                    
-                    self.timer = Timer.scheduledTimer(withTimeInterval: 4, repeats: false, block: { (timer) in
-                        // Do whatever needs to be done when the timer expires
-                        self.speechRecognitionActive()
-                        self.lblCommand.text = "Listening..."
-                        
-                    })
-                    
-                    print(countFail)
-                    
-                } else {
-                    speaker.speak("Please use the button instead", playNote: "")
-                    
-                    self.lblCommand.text = "Listening..."
-                    
-                    destroySpeakRecognition()
-                }
-            }
-        }
-        destroySpeakRecognition()
+        viewModel.prepareAudioEngine()
     }
     
     private func destroySpeakRecognition() {
         lottieAnimation(yPos: self.commandLabel.frame.maxY, show: false)
-        request.endAudio()
-        audioEngine.stop()
-        audioEngine.inputNode.removeTap(onBus: 0)
+        viewModel.request.endAudio()
+        viewModel.audioEngine.stop()
+        viewModel.audioEngine.inputNode.removeTap(onBus: 0)
     }
     
     //MARK: - UI Updates
@@ -581,6 +426,7 @@ class ChordDetailViewController: UIViewController {
     }
     
     private func currentNote(_ senar: Int) -> String {
+        let strings = viewModel.strings
         let fret = strings[5-senar]
         if fret >= 0 {
             return Database.shared.getGuitarNote(senar, strings[(5 - senar)])
@@ -661,7 +507,7 @@ class ChordDetailViewController: UIViewController {
     }
     
     private func finish() {
-        
+        let strings = viewModel.strings
         destroyAllSound()
         
         playChord(strings)
@@ -698,6 +544,7 @@ class ChordDetailViewController: UIViewController {
     }
     
     private func alertView(message: String) {
+        print("Alert Message: \(message)")
         let controller = UIAlertController.init(title: "Error ocured...!", message: message, preferredStyle: .alert)
         
         controller.addAction(UIAlertAction(title: "OK", style: .default, handler: { (_) in

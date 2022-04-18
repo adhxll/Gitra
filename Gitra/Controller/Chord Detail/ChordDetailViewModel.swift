@@ -19,6 +19,7 @@ class ChordDetailViewModel{
     var labelForAccessibility = ["","","","","",""]
     var startingFret = 100 //initialize max value to compare
     
+    @Published var currString = -1
     @Published var alertMessage = ""
     @Published var lblCommandText = ""
     @Published var lblCommandTextLowerCased = ""
@@ -27,6 +28,7 @@ class ChordDetailViewModel{
     let audioEngine = AVAudioEngine()
     let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer()
     var request = SFSpeechAudioBufferRecognitionRequest()
+    let speaker = Speaker()
 
     //Timer
     var timer: Timer?
@@ -104,6 +106,29 @@ class ChordDetailViewModel{
             task = nil
             lblCommandTextLowerCased = resultCommand.lowercased()
         }
+    }
+    
+    func changeString(isNext: Int){
+        if isNext == 1 {
+            currString = (currString + 1) % 6
+            
+            if (currString == 5) {
+            }
+            
+        } else if isNext == 2 {
+            currString = (currString - 1)
+            if currString < 0{
+                currString = 5
+            }
+        } else if isNext == 3 {}
+    }
+    
+    func currentNote(_ senar: Int) -> String {
+        let fret = strings[5-senar]
+        if fret >= 0 {
+            return Database.shared.getGuitarNote(senar, strings[(5 - senar)])
+        }
+        return ""
     }
     
     func generateStringForLabel(){ //Jari, Senar, Fret
@@ -190,6 +215,38 @@ class ChordDetailViewModel{
         }
     }
     
+}
+
+//MARK: - Speaker Class
+
+class Speaker: NSObject {
+    let synth = AVSpeechSynthesizer()
+    var note = ""
+    
+    override init() {
+        super.init()
+        synth.delegate = self
+    }
+    
+    func speak(_ str: String, playNote: String){
+        let utterance = AVSpeechUtterance(string: str)
+        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+        utterance.rate = AVSpeechUtteranceMaximumSpeechRate / 2.0
+        synth.speak(utterance)
+        note = playNote
+    }
+    
+    func stop() {
+        synth.stopSpeaking(at: .immediate)
+    }
+}
+
+extension Speaker: AVSpeechSynthesizerDelegate {
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        if note != "" {
+            NotesMapping.shared.playSound(note)
+        }
+    }
 }
 
 

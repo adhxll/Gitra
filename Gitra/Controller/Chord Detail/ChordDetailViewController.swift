@@ -39,18 +39,17 @@ class ChordDetailViewController: UIViewController {
     
     let animationView = AnimationView()
     
-    var workItemSpeech: DispatchWorkItem?
-    var workItemCommand: DispatchWorkItem?
-    var workItemRecognizer: DispatchWorkItem?
-    
     @IBOutlet weak var lblCommand: UILabel!
     
     //Audio
     var player: AVAudioPlayer?
     
     let speechSynthesizer = AVSpeechSynthesizer()
-    let speaker = Speaker()
     var indicators:[FingerIndicator] = []
+    
+    var workItemSpeech: DispatchWorkItem?
+    var workItemCommand: DispatchWorkItem?
+    var workItemRecognizer: DispatchWorkItem?
     
     var countFail = 0
     var goToSetting: Bool = false
@@ -58,6 +57,7 @@ class ChordDetailViewController: UIViewController {
     //Subscriber
     var alertMessageSubscriber: AnyCancellable?
     var taskSubscriber: AnyCancellable?
+    var lblCommandTextSubscriber: AnyCancellable?
     var lblCommandTextLowerCasedSubscriber: AnyCancellable?
     
     //Initialize Subscriber
@@ -70,13 +70,21 @@ class ChordDetailViewController: UIViewController {
                 print("Task = nil")
                 //self.hideAnimation()
             }
+            else{
+                print("Task changed: \(String(describing: result))")
+            }
+        })
+        lblCommandTextSubscriber = viewModel.$lblCommandText.sink(receiveValue: { result in
+            print("Label Command Text : \(result)")
+            self.lblCommand.text = result
         })
         lblCommandTextLowerCasedSubscriber = viewModel.$lblCommandTextLowerCased.sink(receiveValue: { lowerCased in
-            self.lblCommand.text = lowerCased
+            let currString = self.viewModel.currString
+            let speaker = self.viewModel.speaker
             if (lowerCased == "next") {
                 self.countFail = 0
-                if self.currString < 5 {
-                    self.changeString(isNext: 1)
+                if currString < 5 {
+                    self.displayChangeString(isNext: 1)
                     self.speakInstruction()
                 } else {
                     self.finish()
@@ -84,11 +92,11 @@ class ChordDetailViewController: UIViewController {
             // print("Next bawah")
             } else if ( lowerCased == "previous") {
                 self.countFail = 0
-                self.changeString(isNext: 2)
+                self.displayChangeString(isNext: 2)
                 self.speakInstruction()
             } else if ( lowerCased == "repeat") {
                 self.countFail = 0
-                self.changeString(isNext: 3)
+                self.displayChangeString(isNext: 3)
                 self.speakInstruction()
             } else if ( lowerCased == "finish") {
                 self.countFail = 0
@@ -98,8 +106,8 @@ class ChordDetailViewController: UIViewController {
                 self.finish()
                 
             } else if ( lowerCased == "start over") {
-                self.currString = -1
-                self.changeString(isNext: 1)
+                self.viewModel.currString = -1
+                self.displayChangeString(isNext: 1)
                 self.speakInstruction()
                 self.countFail = 0
             } else if ( lowerCased == "") { print("Lowercased first initialization") }
@@ -109,7 +117,7 @@ class ChordDetailViewController: UIViewController {
                 //Sound Feedback On
                 if ( self.countFail < 2) {
                     print("LowerCased message : \(lowerCased)")
-                    self.speaker.speak("Voice feedback is not available, please Input your voice again", playNote: "")
+                    speaker.speak("Voice feedback is not available, please Input your voice again", playNote: "")
                     self.countFail = self.countFail + 1
                     
                     self.viewModel.timer = Timer.scheduledTimer(withTimeInterval: 4, repeats: false, block: { (timer) in
@@ -120,7 +128,7 @@ class ChordDetailViewController: UIViewController {
                     })
                     print(self.countFail)
                 } else {
-                    self.speaker.speak("Please use the button instead", playNote: "")
+                    speaker.speak("Please use the button instead", playNote: "")
                     self.lblCommand.text = "Listening..."
                     self.destroySpeakRecognition()
                 }
@@ -168,7 +176,7 @@ class ChordDetailViewController: UIViewController {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.playChord(self.viewModel.strings)
             }
-            self.changeString(isNext: 1)
+            self.displayChangeString(isNext: 1)
             let delay: DispatchTime = .now() + (6 * chordDelay) + 0.5
             DispatchQueue.main.asyncAfter(deadline: delay){
                 self.speakInstruction()
@@ -182,46 +190,28 @@ class ChordDetailViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = false
-        destroySpeakRecognition()
         hideAnimation()
-        
-        workItemSpeech?.cancel()
-        workItemCommand?.cancel()
-        workItemRecognizer?.cancel()
-        speaker.stop()
+        destroyAllSound()
     }
     
     //MARK: - Displaying Chord, Fingering, & Frets Position
     
     //number of frets juga
     //open or dead
-    var currString = -1
-    func changeString(isNext: Int){
+    func displayChangeString(isNext: Int){
         let accessibilityLabel = viewModel.labelForAccessibility
+        viewModel.changeString(isNext: isNext)
+        let currString = viewModel.currString
         var prev = 0
         if currString - 1 >= 0 {
             prev = indicators.count - currString - 1
         } else {
             prev = 5
         }
+        print("Current currString : \(viewModel.currString)")
+        print("Accesibility Label : \(accessibilityLabel[currString])")
         indicators[prev].backgroundColor = UIColor.ColorLibrary.whiteAccent
         indicators[prev].setTitleColor(UIColor.ColorLibrary.blackAccent, for: .normal)
-        
-        if isNext == 1 {
-            currString = (currString + 1) % 6
-            
-            if (currString == 5) {
-            }
-            
-        } else if isNext == 2 {
-            currString = (currString - 1)
-            if currString < 0{
-                currString = 5
-            }
-        } else if isNext == 3 {
-            
-        }
-        
         instructionLabel.text = accessibilityLabel[currString]
         let imageName = "FretsGlow-" + String(currString + 1)
         fretImage.image = UIImage(named: imageName)
@@ -293,6 +283,44 @@ class ChordDetailViewController: UIViewController {
         viewModel.request.endAudio()
         viewModel.audioEngine.stop()
         viewModel.audioEngine.inputNode.removeTap(onBus: 0)
+    }
+    
+    private func speakInstruction() {
+        let speaker = viewModel.speaker
+        let tempString = viewModel.currString
+        let userDefaults = UserDefaults.standard.integer(forKey: "inputCommand")
+        
+        speaker.stop()
+        speaker.speak(instructionLabel.text!, playNote: viewModel.currentNote(tempString))
+        
+        let delay: DispatchTime = (viewModel.currentNote(tempString) == "") ? (.now() + 0) : (.now() + 3)
+        
+        workItemSpeech = DispatchWorkItem{
+            //Check if user move to the next string before completing the instruction.
+            if self.viewModel.currString == tempString {
+                speaker.speak(self.instructionLabel.text!, playNote: self.viewModel.currentNote(self.viewModel.currString))
+            }
+        }
+        
+        workItemCommand = DispatchWorkItem{
+            speaker.speak("Say ‘repeat’ to repeat the instructions. Say 'next' to move to the next string. Say 'previous' to move to the previous string. Say 'finish' to end the session.", playNote: "")
+        }
+        
+        workItemRecognizer = DispatchWorkItem{
+            //Check if user move to the next string before completing the instruction.
+            self.destroySpeakRecognition()
+            self.speechRecognitionActive()
+            self.lblCommand.text = ""
+        }
+        
+        if userDefaults == 0 {
+            DispatchQueue.main.asyncAfter(deadline: delay, execute: workItemSpeech!)
+            DispatchQueue.main.asyncAfter(deadline: delay + 4, execute: workItemRecognizer!)
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: delay, execute: workItemSpeech!)
+            DispatchQueue.main.asyncAfter(deadline: delay + 4, execute: workItemCommand!)
+            DispatchQueue.main.asyncAfter(deadline: delay + 14, execute: workItemRecognizer!)
+        }
     }
     
     //MARK: - UI Updates
@@ -425,57 +453,12 @@ class ChordDetailViewController: UIViewController {
         fretImage.image = animatedImages.last
     }
     
-    private func currentNote(_ senar: Int) -> String {
-        let strings = viewModel.strings
-        let fret = strings[5-senar]
-        if fret >= 0 {
-            return Database.shared.getGuitarNote(senar, strings[(5 - senar)])
-        }
-        return ""
-    }
-    
-    private func speakInstruction() {
-        let tempString = currString
-        let userDefaults = UserDefaults.standard.integer(forKey: "inputCommand")
-        
-        speaker.stop()
-        speaker.speak(instructionLabel.text!, playNote: currentNote(currString))
-        
-        let delay: DispatchTime = (currentNote(currString) == "") ? (.now() + 0) : (.now() + 3)
-        
-        workItemSpeech = DispatchWorkItem{
-            //Check if user move to the next string before completing the instruction.
-            if self.currString == tempString {
-                self.speaker.speak(self.instructionLabel.text!, playNote: self.currentNote(self.currString))
-            }
-        }
-        
-        workItemCommand = DispatchWorkItem{
-            self.speaker.speak("Say ‘repeat’ to repeat the instructions. Say 'next' to move to the next string. Say 'previous' to move to the previous string. Say 'finish' to end the session.", playNote: "")
-        }
-        
-        workItemRecognizer = DispatchWorkItem{
-            //Check if user move to the next string before completing the instruction.
-            self.speechRecognitionActive()
-            self.lblCommand.text = ""
-        }
-        
-        if userDefaults == 0 {
-            DispatchQueue.main.asyncAfter(deadline: delay, execute: workItemSpeech!)
-            DispatchQueue.main.asyncAfter(deadline: delay + 4, execute: workItemRecognizer!)
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: delay, execute: workItemSpeech!)
-            DispatchQueue.main.asyncAfter(deadline: delay + 4, execute: workItemCommand!)
-            DispatchQueue.main.asyncAfter(deadline: delay + 14, execute: workItemRecognizer!)
-        }
-    }
-    
     private func destroyAllSound() {
         destroySpeakRecognition()
         workItemSpeech?.cancel()
         workItemCommand?.cancel()
         workItemRecognizer?.cancel()
-        speaker.stop()
+        viewModel.speaker.stop()
     }
     
     //MARK: - IBAction & Other Function
@@ -483,7 +466,7 @@ class ChordDetailViewController: UIViewController {
     @IBAction func previouszTapped(_ sender: UIBarButtonItem){
         destroySpeakRecognition()
         destroyAllSound()
-        changeString(isNext: 2)
+        displayChangeString(isNext: 2)
         speakInstruction()
         countFail = 0
     }
@@ -496,9 +479,9 @@ class ChordDetailViewController: UIViewController {
     }
     
     private func next() {
+        let currString = viewModel.currString
         if currString < 5 {
-            
-            changeString(isNext: 1)
+            displayChangeString(isNext: 1)
             speakInstruction()
             
         } else {
@@ -515,7 +498,7 @@ class ChordDetailViewController: UIViewController {
         let delay: DispatchTime = .now() + (6 * chordDelay) + 0.5
         
         DispatchQueue.global().asyncAfter(deadline: delay){
-            self.speaker.speak("Congratulation You have Learn \(self.selectedChord?.accessibilityLabel ?? "a new Chord")", playNote: "")
+            self.viewModel.speaker.speak("Congratulation You have Learn \(self.selectedChord?.accessibilityLabel ?? "a new Chord")", playNote: "")
         }
         
         //        let defaults = UserDefaults.standard.integer(forKey: "inputMode")
@@ -552,37 +535,5 @@ class ChordDetailViewController: UIViewController {
         }))
         
         self.present(controller, animated: true, completion: nil)
-    }
-}
-
-//MARK: - Speaker Class
-
-class Speaker: NSObject {
-    let synth = AVSpeechSynthesizer()
-    var note = ""
-    
-    override init() {
-        super.init()
-        synth.delegate = self
-    }
-    
-    func speak(_ str: String, playNote: String){
-        let utterance = AVSpeechUtterance(string: str)
-        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
-        utterance.rate = AVSpeechUtteranceMaximumSpeechRate / 2.0
-        synth.speak(utterance)
-        note = playNote
-    }
-    
-    func stop() {
-        synth.stopSpeaking(at: .immediate)
-    }
-}
-
-extension Speaker: AVSpeechSynthesizerDelegate {
-    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        if note != "" {
-            NotesMapping.shared.playSound(note)
-        }
     }
 }

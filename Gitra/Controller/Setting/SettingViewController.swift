@@ -16,7 +16,7 @@ class SettingViewController: UIViewController {
         return tableView
     }()
     
-    private var settingVM: SettingViewModel
+    var settingVM: SettingViewModel
     
     init(settingVM: SettingViewModel) {
         self.settingVM = settingVM
@@ -39,7 +39,7 @@ class SettingViewController: UIViewController {
         reloadData()
     }
     
-    private func setupUI() {
+    func setupUI() {
         // Main View
         title = settingVM.data.pageTitle
         tabBarController?.tabBar.isHidden = true
@@ -56,18 +56,18 @@ class SettingViewController: UIViewController {
         tableView.register(SettingTableViewCell.self, forCellReuseIdentifier: SettingTableViewCell.identifier)
     }
     
-    private func reloadData() {
+    func reloadData() {
         tableView.reloadData()
     }
     
-    private func clearAccecoryType() {
+    func clearAccecoryType() {
         // Deselect all row to remove checkmark
         for i in 0..<settingVM.settingListCount() {
             tableView.cellForRow(at: [0,i])?.accessoryType = .none
         }
     }
     
-    @objc private func switchChanged(_ sender: UISwitch!) {
+    @objc func switchChanged(_ sender: UISwitch!) {
         let status = sender.isOn ? 1 : 0
         settingVM.toggleSettings(value: status, forKey: .allCases[sender.tag])
     }
@@ -84,9 +84,10 @@ extension SettingViewController: UITableViewDelegate {
         
         // If currentCell has child
         if currCell.hasChild {
-            let nextVM = SettingViewModel()
-            nextVM.data = currCell
-            let nextVC = SettingViewController(settingVM: nextVM)
+            let nextVM = settingVM.settingForRow(at: indexPath.row)
+            let nextVVM = SettingViewModel()
+            nextVVM.data = nextVM
+            let nextVC = SettingViewController(settingVM: nextVVM)
             self.navigationController?.pushViewController(nextVC, animated: true)
         }
         

@@ -62,79 +62,86 @@ class ChordDetailViewController: UIViewController {
     
     //Initialize Subscriber
     func initializeSubscriber(){
-        alertMessageSubscriber = viewModel.$alertMessage.sink(receiveValue: { message in
-            if(message != ""){ self.alertView(message: message) }
+        alertMessageSubscriber = viewModel.$alertMessage.sink(receiveValue: { [weak self] message in
+            if(message != ""){
+                self?.alertView(message: message)
+            }
         })
-        taskSubscriber = viewModel.$task.sink(receiveValue: { result in
+        taskSubscriber = viewModel.$task.sink(receiveValue: { [weak self] result in
             if (result == nil) {
                 print("Task = nil")
-                //self.hideAnimation()
+                self?.hideAnimation()
             }
             else{
                 print("Task changed: \(String(describing: result))")
             }
         })
-        lblCommandTextSubscriber = viewModel.$lblCommandText.sink(receiveValue: { result in
+        lblCommandTextSubscriber = viewModel.$lblCommandText.sink(receiveValue: { [weak self] result in
             print("Label Command Text : \(result)")
-            self.lblCommand.text = result
+            self?.lblCommand.text = result
         })
-        lblCommandTextLowerCasedSubscriber = viewModel.$lblCommandTextLowerCased.sink(receiveValue: { lowerCased in
-            let currString = self.viewModel.currString
-            let speaker = self.viewModel.speaker
-            if (lowerCased == "next") {
-                self.countFail = 0
-                if currString < 5 {
-                    self.displayChangeString(isNext: 1)
-                    self.speakInstruction()
-                } else {
-                    self.finish()
-                }
-            // print("Next bawah")
-            } else if ( lowerCased == "previous") {
-                self.countFail = 0
-                self.displayChangeString(isNext: 2)
-                self.speakInstruction()
-            } else if ( lowerCased == "repeat") {
-                self.countFail = 0
-                self.displayChangeString(isNext: 3)
-                self.speakInstruction()
-            } else if ( lowerCased == "finish") {
-                self.countFail = 0
-                self.viewModel.request.endAudio()
-                self.viewModel.audioEngine.stop()
-                self.viewModel.audioEngine.inputNode.removeTap(onBus: 0)
-                self.finish()
-                
-            } else if ( lowerCased == "start over") {
-                self.viewModel.currString = -1
+        lblCommandTextLowerCasedSubscriber = viewModel.$lblCommandTextLowerCased.sink(receiveValue: { [weak self] lowerCased in
+            self?.checkLblCommandTextSubscriber(lowerCased: lowerCased)
+        })
+    }
+    
+    func checkLblCommandTextSubscriber(lowerCased: String){
+        let currString = self.viewModel.currString
+        let speaker = self.viewModel.speaker
+        if (lowerCased == "next") {
+            self.countFail = 0
+            if currString < 5 {
                 self.displayChangeString(isNext: 1)
                 self.speakInstruction()
-                self.countFail = 0
-            } else if ( lowerCased == "") { print("Lowercased first initialization") }
-            
-            else {
-                //If the word is not match from the constraint above
-                //Sound Feedback On
-                if ( self.countFail < 2) {
-                    print("LowerCased message : \(lowerCased)")
-                    speaker.speak("Voice feedback is not available, please Input your voice again", playNote: "")
-                    self.countFail = self.countFail + 1
-                    
-                    self.viewModel.timer = Timer.scheduledTimer(withTimeInterval: 4, repeats: false, block: { (timer) in
-                        // Do whatever needs to be done when the timer expires
-                        self.speechRecognitionActive()
-                        self.lblCommand.text = "Listening..."
-                        
-                    })
-                    print(self.countFail)
-                } else {
-                    speaker.speak("Please use the button instead", playNote: "")
-                    self.lblCommand.text = "Listening..."
-                    self.destroySpeakRecognition()
-                }
+            } else {
+                self.finish()
             }
-            //self.destroySpeakRecognition()
-        })
+        // print("Next bawah")
+        } else if ( lowerCased == "previous") {
+            self.countFail = 0
+            self.displayChangeString(isNext: 2)
+            self.speakInstruction()
+        } else if ( lowerCased == "repeat") {
+            self.countFail = 0
+            self.displayChangeString(isNext: 3)
+            self.speakInstruction()
+        } else if ( lowerCased == "finish") {
+            self.countFail = 0
+            self.viewModel.request.endAudio()
+            self.viewModel.audioEngine.stop()
+            self.viewModel.audioEngine.inputNode.removeTap(onBus: 0)
+            self.finish()
+            
+        } else if ( lowerCased == "start over") {
+            self.viewModel.currString = -1
+            self.displayChangeString(isNext: 1)
+            self.speakInstruction()
+            self.countFail = 0
+        } else if ( lowerCased == "") {
+            print("Lowercased first initialization")
+        }
+        
+        else {
+            //If the word is not match from the constraint above
+            //Sound Feedback On
+            if ( self.countFail < 2) {
+                print("LowerCased message : \(lowerCased)")
+                speaker.speak("Voice feedback is not available, please Input your voice again", playNote: "")
+                self.countFail = self.countFail + 1
+                
+                self.viewModel.timer = Timer.scheduledTimer(withTimeInterval: 4, repeats: false, block: { (timer) in
+                    // Do whatever needs to be done when the timer expires
+                    self.speechRecognitionActive()
+                    self.lblCommand.text = "Listening..."
+                    
+                })
+                print(self.countFail)
+            } else {
+                speaker.speak("Please use the button instead", playNote: "")
+                self.lblCommand.text = "Listening..."
+                self.destroySpeakRecognition()
+            }
+        }
     }
     
     //MARK: - View Updates
@@ -154,22 +161,26 @@ class ChordDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        initialViewSetup()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.tabBarController?.tabBar.isHidden = false
+        hideAnimation()
+        destroyAllSound()
+    }
+    
+    func initialViewSetup(){
         self.lottieAnimation(yPos: self.view.frame.maxY * 0.4, show: true)
         setAlpha(isHide: true)
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: { [self] in
-            
             guard chordModel != nil else {
                 return
             }
-            
             initializeSubscriber()
-            
             viewModel.translateToCoordinate(chord: chordModel!)
             self.displayIndicators()
             viewModel.generateStringForLabel()
-            
             UIView.animate(withDuration: 0.5) {
                 self.setAlpha(isHide: false)
             }
@@ -181,17 +192,9 @@ class ChordDetailViewController: UIViewController {
             DispatchQueue.main.asyncAfter(deadline: delay){
                 self.speakInstruction()
             }
-            
             animationView.stop()
             animationView.alpha = 0
-            
         })
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        self.tabBarController?.tabBar.isHidden = false
-        hideAnimation()
-        destroyAllSound()
     }
     
     //MARK: - Displaying Chord, Fingering, & Frets Position

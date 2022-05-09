@@ -78,7 +78,7 @@ class ChordVoiceViewModel {
             }
             
             //For Checking But Duplicate
-            DispatchQueue.global().async {
+            DispatchQueue.global().async { 
                 self.task = nil
                 NetworkManager().getSpecificChord(chord: chordURLParameterSave) { chordResult in
                     DispatchQueue.main.async {

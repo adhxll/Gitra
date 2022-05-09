@@ -33,6 +33,7 @@
 		745F5CCD280A21FE00F254B6 /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745F5CCC280A21FE00F254B6 /* SettingTableViewCell.swift */; };
 		745F5CCF280A7C7200F254B6 /* CustomSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745F5CCE280A7C7200F254B6 /* CustomSwitch.swift */; };
 		79C7DC9F2673B224006D4104 /* SettingsDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C7DC9E2673B224006D4104 /* SettingsDatabase.swift */; };
+		7C16C00C28290B48006B7A37 /* ChordPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C16C00B28290B48006B7A37 /* ChordPickerViewModel.swift */; };
 		9028B9BC267E286600A14BAC /* loading-animation-2.json in Resources */ = {isa = PBXBuildFile; fileRef = 9028B9BA267E286600A14BAC /* loading-animation-2.json */; };
 		9028B9BD267E286600A14BAC /* loading-animation-1.json in Resources */ = {isa = PBXBuildFile; fileRef = 9028B9BB267E286600A14BAC /* loading-animation-1.json */; };
 		904DC629267258DC00DD799E /* E5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 904DC5FB267258D900DD799E /* E5.mp3 */; };
@@ -141,6 +142,7 @@
 		745F5CCC280A21FE00F254B6 /* SettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewCell.swift; sourceTree = "<group>"; };
 		745F5CCE280A7C7200F254B6 /* CustomSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSwitch.swift; sourceTree = "<group>"; };
 		79C7DC9E2673B224006D4104 /* SettingsDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDatabase.swift; sourceTree = "<group>"; };
+		7C16C00B28290B48006B7A37 /* ChordPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordPickerViewModel.swift; sourceTree = "<group>"; };
 		9028B9BA267E286600A14BAC /* loading-animation-2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "loading-animation-2.json"; sourceTree = "<group>"; };
 		9028B9BB267E286600A14BAC /* loading-animation-1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "loading-animation-1.json"; sourceTree = "<group>"; };
 		904DC5FB267258D900DD799E /* E5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = E5.mp3; sourceTree = "<group>"; };
@@ -365,6 +367,7 @@
 			children = (
 				522785D0266E5B04005BF33E /* ChordPickerViewController.swift */,
 				522785F9266E5F36005BF33E /* ChordPickerTunerViewController.swift */,
+				7C16C00B28290B48006B7A37 /* ChordPickerViewModel.swift */,
 			);
 			path = "Chord Picker";
 			sourceTree = "<group>";
@@ -691,7 +694,6 @@
 				52698D18266DE9D5004F7AD6 /* Gitra.xcdatamodeld in Sources */,
 				745F5CCD280A21FE00F254B6 /* SettingTableViewCell.swift in Sources */,
 				745F5CCF280A7C7200F254B6 /* CustomSwitch.swift in Sources */,
-				7CC7CDD7266F491F001C0C9C /* OnBoardingAnimation.swift in Sources */,
 				D8355D752677925C00F2D718 /* FingerIndicator.swift in Sources */,
 				90799B65267A7D3D0050B25C /* OnboardingHandler.swift in Sources */,
 				522785D4266E5B0D005BF33E /* ChordDetailViewController.swift in Sources */,
@@ -699,13 +701,11 @@
 				BD9EE8BA266E46C90081B951 /* GradientView.swift in Sources */,
 				52EE72E226724D5500B3E7EE /* Helper.swift in Sources */,
 				90B0163D2671085A0054ED9D /* ChordQuality.swift in Sources */,
+				7C16C00C28290B48006B7A37 /* ChordPickerViewModel.swift in Sources */,
 				52698D0E266DE9D5004F7AD6 /* AppDelegate.swift in Sources */,
 				5293C813266F339100151BF7 /* ChordResponse.swift in Sources */,
 				522785FA266E5F36005BF33E /* ChordPickerTunerViewController.swift in Sources */,
-				90BA3CD3267A2EA4004F1804 /* InstructionListTableViewCell.swift in Sources */,
-				522785F6266E5F0C005BF33E /* ChordVoiceTunerViewController.swift in Sources */,
 				90BF406227FBE30500ED53E3 /* SettingMenuViewModel.swift in Sources */,
-				90766B05267A67D000FFA576 /* SelectorViewController.swift in Sources */,
 				52EE72ED26726B2100B3E7EE /* SoundHelper.swift in Sources */,
 				5293C816266F346E00151BF7 /* ChordModel.swift in Sources */,
 				D8199BE5280B0236004168B4 /* SelectorViewController.swift in Sources */,
@@ -714,7 +714,6 @@
 				90B0163F26710C490054ED9D /* Database.swift in Sources */,
 				52698D10266DE9D5004F7AD6 /* SceneDelegate.swift in Sources */,
 				522785CE266E5AFA005BF33E /* ChordVoiceViewController.swift in Sources */,
-				90BA3CD5267A2EA4004F1804 /* SettingListViewController.swift in Sources */,
 				D8199BE128030767004168B4 /* ChordVoiceViewModel.swift in Sources */,
 				522785D1266E5B04005BF33E /* ChordPickerViewController.swift in Sources */,
 			);
@@ -865,7 +864,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = HLL562LRK4;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Gitra/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -887,7 +886,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = HLL562LRK4;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Gitra/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
 				LD_RUNPATH_SEARCH_PATHS = (

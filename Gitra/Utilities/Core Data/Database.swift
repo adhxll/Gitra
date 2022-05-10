@@ -12,12 +12,13 @@ class Database {
     static let shared = Database()
     
     private var noteList = [ChordBase]()
-    private var chordList = [ChordQuality]()
+    private var chordList = [ChordBase]()
     private var guitarNotes = [[String]]()
     
     init(){
     }
     
+    // MARK: - Seeder Methods
     func seedNote() {
         noteList.append(ChordBase(value: "C", accessibility: "C", apiFormat: "C"))
         noteList.append(ChordBase(value: "C♯", accessibility: "C Sharp", apiFormat: "Db"))
@@ -34,47 +35,47 @@ class Database {
     }
     
     func seedChord() {
-        let empty = ChordTension(value: "-", accessibility: "", apiFormat: "")
-        let second = ChordTension(value: "2", accessibility: "Second", apiFormat: "2")
-        let fourth = ChordTension(value: "4", accessibility: "Fourth", apiFormat: "4")
-        let sixth = ChordTension(value: "6", accessibility: "Sixth", apiFormat: "6")
-        let sixthNinth = ChordTension(value: "6", accessibility: "Sixth Nine", apiFormat: "69")
-        let seventh = ChordTension(value: "7", accessibility: "Seventh", apiFormat: "7")
-        let sevenSharpFifth = ChordTension(value: "7♯5", accessibility: "Seventh Sharp Fifth", apiFormat: "7#5")
-        let sevenFlatFifth = ChordTension(value: "7♭5", accessibility: "Seventh Flat Fifth", apiFormat: "7b5")
-        let sevenSharpNinth = ChordTension(value: "7♯9", accessibility: "Seventh Sharp Ninth", apiFormat: "7#9")
-        let sevenFlatNinth = ChordTension(value: "7♭9", accessibility: "Seventh Flat Ninth", apiFormat: "7b9")
-        let ninth = ChordTension(value: "9", accessibility: "Ninth", apiFormat: "9")
-        let eleventh = ChordTension(value: "11", accessibility: "Eleventh", apiFormat: "11")
+        let empty = ChordBase(value: "-", accessibility: "", apiFormat: "")
+        let second = ChordBase(value: "2", accessibility: "Second", apiFormat: "2")
+        let fourth = ChordBase(value: "4", accessibility: "Fourth", apiFormat: "4")
+        let sixth = ChordBase(value: "6", accessibility: "Sixth", apiFormat: "6")
+        let sixthNinth = ChordBase(value: "6", accessibility: "Sixth Nine", apiFormat: "69")
+        let seventh = ChordBase(value: "7", accessibility: "Seventh", apiFormat: "7")
+        let sevenSharpFifth = ChordBase(value: "7♯5", accessibility: "Seventh Sharp Fifth", apiFormat: "7#5")
+        let sevenFlatFifth = ChordBase(value: "7♭5", accessibility: "Seventh Flat Fifth", apiFormat: "7b5")
+        let sevenSharpNinth = ChordBase(value: "7♯9", accessibility: "Seventh Sharp Ninth", apiFormat: "7#9")
+        let sevenFlatNinth = ChordBase(value: "7♭9", accessibility: "Seventh Flat Ninth", apiFormat: "7b9")
+        let ninth = ChordBase(value: "9", accessibility: "Ninth", apiFormat: "9")
+        let eleventh = ChordBase(value: "11", accessibility: "Eleventh", apiFormat: "11")
         
-        chordList.append(ChordQuality(value: "-",
-                                      accessibility: "",
-                                      apiFormat: "",
-                                      tension: [empty, sixth, sixthNinth, seventh, sevenSharpFifth, sevenFlatFifth, sevenSharpNinth, sevenFlatNinth, eleventh]))
-        chordList.append(ChordQuality(value: "Major",
-                                      accessibility: "Major",
-                                      apiFormat: "",
-                                      tension: [empty, sixth, sixthNinth, seventh, ninth, eleventh]))
-        chordList.append(ChordQuality(value: "Minor",
-                                      accessibility: "Minor",
-                                      apiFormat: "m",
-                                      tension: [empty, sixth, sixthNinth, seventh, ninth, eleventh]))
-        chordList.append(ChordQuality(value: "Add",
-                                      accessibility: "Add",
-                                      apiFormat: "add",
-                                      tension: [ninth, eleventh]))
-        chordList.append(ChordQuality(value: "Sus",
-                                      accessibility: "Suspended",
-                                      apiFormat: "sus",
-                                      tension: [second, fourth]))
-        chordList.append(ChordQuality(value: "Dim",
-                                      accessibility: "Diminished",
-                                      apiFormat: "dim",
-                                      tension: [empty]))
-        chordList.append(ChordQuality(value: "Aug",
-                                      accessibility: "Augmented",
-                                      apiFormat: "aug",
-                                      tension: [empty]))
+        chordList.append(ChordBase(value: "-",
+                                   accessibility: "",
+                                   apiFormat: "",
+                                   child: [empty, sixth, sixthNinth, seventh, sevenSharpFifth, sevenFlatFifth, sevenSharpNinth, sevenFlatNinth, eleventh]))
+        chordList.append(ChordBase(value: "Major",
+                                   accessibility: "Major",
+                                   apiFormat: "maj",
+                                   child: [empty, sixth, sixthNinth, seventh, ninth, eleventh]))
+        chordList.append(ChordBase(value: "Minor",
+                                   accessibility: "Minor",
+                                   apiFormat: "m",
+                                   child: [empty, sixth, sixthNinth, seventh, ninth, eleventh]))
+        chordList.append(ChordBase(value: "Add",
+                                   accessibility: "Add",
+                                   apiFormat: "add",
+                                   child: [ninth, eleventh]))
+        chordList.append(ChordBase(value: "Sus",
+                                   accessibility: "Suspended",
+                                   apiFormat: "sus",
+                                   child: [second, fourth]))
+        chordList.append(ChordBase(value: "Dim",
+                                   accessibility: "Diminished",
+                                   apiFormat: "dim",
+                                   child: [empty]))
+        chordList.append(ChordBase(value: "Aug",
+                                   accessibility: "Augmented",
+                                   apiFormat: "aug",
+                                   child: [empty]))
     }
     
     func seedGuitarNotes() {
@@ -86,6 +87,7 @@ class Database {
         guitarNotes.append(["E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2", "C3", "C#3", "D3", "D#3", "E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3", "C3"])
     }
     
+    // MARK: - Public Methods
     func seedData() {
         seedNote()
         seedChord()
@@ -96,7 +98,7 @@ class Database {
         return noteList
     }
     
-    func getChord() -> [ChordQuality] {
+    func getChord() -> [ChordBase] {
         return chordList
     }
     

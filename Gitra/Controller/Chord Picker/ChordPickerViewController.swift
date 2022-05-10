@@ -13,13 +13,8 @@ class ChordPickerViewController: UIViewController {
     @IBOutlet weak var chooseButton: UIButton!
     @IBOutlet weak var chordPicker: UIPickerView!
     
-    var result = ChordName(title: "", accessibilityLabel: "", urlParameter: "")
-    
-    var root = ""
-    var quality = ""
-    var tension = ""
-    
-    var chordPickerVM = ChordPickerViewModel()
+    private var viewModel: ChordPickerViewModel = ChordPickerViewModel()
+    private var result: ChordName = ChordName(title: "", accessibilityLabel: "", urlParameter: "")
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -44,13 +39,10 @@ class ChordPickerViewController: UIViewController {
     
     // Updating accessibility label for 'Choose Chord' button
     private func updateUI() {
-        chordPickerVM.root = selectedRow(at: 0)
-        chordPickerVM.quality = selectedRow(at: 1)
-        chordPickerVM.tension = selectedRow(at: 2)
         let root = selectedRow(at: 0)
         let quality = selectedRow(at: 1)
         let tension = selectedRow(at: 2)
-        let item = chordPickerVM.generateSelectedChord(root: root, quality: quality, tension: tension)
+        let item = viewModel.generateSelectedChord(root: root, quality: quality, tension: tension)
         chooseButton.accessibilityLabel = "Choose Chord, " + item.accessibiltyLabel
     }
     
@@ -59,7 +51,7 @@ class ChordPickerViewController: UIViewController {
         do { try AVAudioSession.sharedInstance().setCategory(.playAndRecord,
                                                              mode: .default,
                                                              options: [.defaultToSpeaker, .allowBluetooth]) }
-        catch { print("Error") }
+        catch { print("There was an error setting up the audio session.") }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -80,32 +72,6 @@ class ChordPickerViewController: UIViewController {
         }
     }
     
-    func transformChordAPI(_ input: String) -> String {
-        var output = input.lowercased().capitalizingFirstLetter()
-        
-        if output.contains("major") && output.contains("7") {
-            output = output.replacingOccurrences(of: "major", with: "maj")
-        } else {
-            output = output.replacingOccurrences(of: "major", with: "")
-        }
-        
-        if tension == "-" && (quality == "-" || quality == "major") {
-            output = output.replacingOccurrences(of: "_", with: "")
-        }
-        
-        output = output.replacingOccurrences(of: "♯", with: "#")
-        output = output.replacingOccurrences(of: "♭", with: "b")
-        output = output.replacingOccurrences(of: "-", with: "")
-        output = output.replacingOccurrences(of: "/", with: "")
-        output = output.replacingOccurrences(of: "minor", with: "m")
-        output = output.trimmingCharacters(in: .whitespaces)
-        
-        result.title = output
-        output = ChordPickerHelper().swappingSharp(output)
-        
-        return output
-    }
-    
     // Get selected row from UIPickerView components
     func selectedRow(at index: Int) -> Int {
         return chordPicker.selectedRow(inComponent: index)
@@ -113,10 +79,8 @@ class ChordPickerViewController: UIViewController {
     
     // MARK: - IBAction
     @IBAction func chooseChord(_ sender: Any) {
-        var input = root + "_" + quality + tension
-        input = transformChordAPI(input)
-        result.urlParameter = input
-        result.title = result.title?.replacingOccurrences(of: "_", with: "")
+        result.urlParameter = viewModel.selectedChord.apiFormat
+        result.title = viewModel.selectedChord.apiFormat.replacingOccurrences(of: "_", with: "")
         
         performSegue(withIdentifier: "todetail", sender: self)
     }
@@ -138,9 +102,9 @@ extension ChordPickerViewController: UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if component == 0 { return chordPickerVM.noteCount() }
-        else if component == 1 { return chordPickerVM.qualityCount() }
-        return chordPickerVM.tensionCount(for: selectedRow(at: 1))
+        if component == 0 { return viewModel.noteCount() }
+        else if component == 1 { return viewModel.qualityCount() }
+        return viewModel.tensionCount(for: selectedRow(at: 1))
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
@@ -154,15 +118,15 @@ extension ChordPickerViewController: UIPickerViewDataSource {
         }()
         
         if component == 0 {
-            let currItem = chordPickerVM.noteForRow(at: row)
+            let currItem = viewModel.noteForRow(at: row)
             pickerLabel.text = currItem.title
             pickerLabel.accessibilityLabel = currItem.accessibiltyLabel
         } else if component == 1 {
-            let currItem = chordPickerVM.qualityForRow(at: row)
+            let currItem = viewModel.qualityForRow(at: row)
             pickerLabel.text = currItem.title
             pickerLabel.accessibilityLabel = currItem.accessibiltyLabel
         } else {
-            let currItem = chordPickerVM.tensionForRow(at: row, for: selectedRow(at: 1))
+            let currItem = viewModel.tensionForRow(at: row, for: selectedRow(at: 1))
             pickerLabel.text = currItem.title
             pickerLabel.accessibilityLabel = currItem.accessibiltyLabel
         }
@@ -179,8 +143,8 @@ extension ChordPickerViewController: UIPickerViewDataSource {
 extension ChordPickerViewController: UIPickerViewDelegate {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         pickerView.reloadAllComponents()
-        DispatchQueue.main.async {
-            self.updateUI()
+        DispatchQueue.main.async { [weak self] in
+            self?.updateUI()
         }
     }
 }

@@ -36,6 +36,7 @@
 		7485AE08280A93F20017FA45 /* AutomaticTunerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7485AE07280A93F20017FA45 /* AutomaticTunerViewModel.swift */; };
 		7485AE0A280A941E0017FA45 /* ChordPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7485AE09280A941E0017FA45 /* ChordPickerViewModel.swift */; };
 		7485AE0C280A987E0017FA45 /* ChordPickerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7485AE0B280A987E0017FA45 /* ChordPickerHelper.swift */; };
+		74C8464E2829E39E00584004 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 74C846502829E39E00584004 /* Localizable.strings */; };
 		79C7DC9F2673B224006D4104 /* SettingsDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C7DC9E2673B224006D4104 /* SettingsDatabase.swift */; };
 		7CC7CDD7266F491F001C0C9C /* OnBoardingAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7CDD6266F491F001C0C9C /* OnBoardingAnimation.swift */; };
 		9028B9BC267E286600A14BAC /* loading-animation-2.json in Resources */ = {isa = PBXBuildFile; fileRef = 9028B9BA267E286600A14BAC /* loading-animation-2.json */; };
@@ -96,7 +97,7 @@
 		90766B03267A637C00FFA576 /* circle-grow-2.json in Resources */ = {isa = PBXBuildFile; fileRef = 90766B02267A637C00FFA576 /* circle-grow-2.json */; };
 		90766B05267A67D000FFA576 /* SelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90766B04267A67D000FFA576 /* SelectorViewController.swift */; };
 		90799B65267A7D3D0050B25C /* OnboardingHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90799B64267A7D3D0050B25C /* OnboardingHandler.swift */; };
-		90B0163D2671085A0054ED9D /* ChordQuality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B0163C2671085A0054ED9D /* ChordQuality.swift */; };
+		90B0163D2671085A0054ED9D /* ChordBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B0163C2671085A0054ED9D /* ChordBase.swift */; };
 		90B0163F26710C490054ED9D /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B0163E26710C490054ED9D /* Database.swift */; };
 		90BF406027FBDE7B00ED53E3 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BA3CD7267A2F3C004F1804 /* SettingViewController.swift */; };
 		90BF406227FBE30500ED53E3 /* SettingMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BF406127FBE30500ED53E3 /* SettingMenuViewModel.swift */; };
@@ -147,6 +148,8 @@
 		7485AE07280A93F20017FA45 /* AutomaticTunerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomaticTunerViewModel.swift; sourceTree = "<group>"; };
 		7485AE09280A941E0017FA45 /* ChordPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordPickerViewModel.swift; sourceTree = "<group>"; };
 		7485AE0B280A987E0017FA45 /* ChordPickerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordPickerHelper.swift; sourceTree = "<group>"; };
+		74C8464F2829E39E00584004 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		74C846512829E3CA00584004 /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
 		79C7DC9E2673B224006D4104 /* SettingsDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDatabase.swift; sourceTree = "<group>"; };
 		7CC7CDD6266F491F001C0C9C /* OnBoardingAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingAnimation.swift; sourceTree = "<group>"; };
 		9028B9BA267E286600A14BAC /* loading-animation-2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "loading-animation-2.json"; sourceTree = "<group>"; };
@@ -207,7 +210,7 @@
 		90766B02267A637C00FFA576 /* circle-grow-2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "circle-grow-2.json"; sourceTree = "<group>"; };
 		90766B04267A67D000FFA576 /* SelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorViewController.swift; sourceTree = "<group>"; };
 		90799B64267A7D3D0050B25C /* OnboardingHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingHandler.swift; sourceTree = "<group>"; };
-		90B0163C2671085A0054ED9D /* ChordQuality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordQuality.swift; sourceTree = "<group>"; };
+		90B0163C2671085A0054ED9D /* ChordBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordBase.swift; sourceTree = "<group>"; };
 		90B0163E26710C490054ED9D /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		90BA3CD7267A2F3C004F1804 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		90BF406127FBE30500ED53E3 /* SettingMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingMenuViewModel.swift; sourceTree = "<group>"; };
@@ -316,7 +319,7 @@
 				D8355D742677925C00F2D718 /* FingerIndicator.swift */,
 				52698D16266DE9D5004F7AD6 /* Gitra.xcdatamodeld */,
 				5293C815266F346E00151BF7 /* ChordModel.swift */,
-				90B0163C2671085A0054ED9D /* ChordQuality.swift */,
+				90B0163C2671085A0054ED9D /* ChordBase.swift */,
 				90B0163E26710C490054ED9D /* Database.swift */,
 				90CD99A0267611C600464E25 /* TunerData.swift */,
 				90CD99A42676931100464E25 /* NoteFrequency.swift */,
@@ -425,6 +428,7 @@
 				52698D0F266DE9D5004F7AD6 /* SceneDelegate.swift */,
 				52698D19266DE9D8004F7AD6 /* Assets.xcassets */,
 				52698D1B266DE9D8004F7AD6 /* LaunchScreen.storyboard */,
+				74C846502829E39E00584004 /* Localizable.strings */,
 				52698D1E266DE9D8004F7AD6 /* Info.plist */,
 			);
 			path = Gitra;
@@ -589,6 +593,7 @@
 			knownRegions = (
 				en,
 				Base,
+				id,
 			);
 			mainGroup = 52698D01266DE9D5004F7AD6;
 			packageReferences = (
@@ -655,6 +660,7 @@
 				904DC640267258DC00DD799E /* B2.mp3 in Resources */,
 				904DC63D267258DC00DD799E /* F2.mp3 in Resources */,
 				904DC637267258DC00DD799E /* C3.mp3 in Resources */,
+				74C8464E2829E39E00584004 /* Localizable.strings in Resources */,
 				522785E8266E5D6B005BF33E /* ChordVoiceChord.storyboard in Resources */,
 				9028B9BD267E286600A14BAC /* loading-animation-1.json in Resources */,
 				904DC649267258DC00DD799E /* G#5.mp3 in Resources */,
@@ -710,7 +716,7 @@
 				7485AE08280A93F20017FA45 /* AutomaticTunerViewModel.swift in Sources */,
 				BD9EE8BA266E46C90081B951 /* GradientView.swift in Sources */,
 				52EE72E226724D5500B3E7EE /* Helper.swift in Sources */,
-				90B0163D2671085A0054ED9D /* ChordQuality.swift in Sources */,
+				90B0163D2671085A0054ED9D /* ChordBase.swift in Sources */,
 				52698D0E266DE9D5004F7AD6 /* AppDelegate.swift in Sources */,
 				5293C813266F339100151BF7 /* ChordResponse.swift in Sources */,
 				522785F6266E5F0C005BF33E /* ChordVoiceTunerViewController.swift in Sources */,
@@ -746,6 +752,15 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
+		74C846502829E39E00584004 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				74C8464F2829E39E00584004 /* en */,
+				74C846512829E3CA00584004 /* id */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -753,6 +768,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -814,6 +830,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

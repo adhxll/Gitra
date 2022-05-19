@@ -32,9 +32,14 @@ class ChordPickerViewController: UIViewController {
     // Need to handle tabBar.isHidden property
     // Thus, this should be called on viewWillAppear not viewDidLoad
     private func setupUI() {
+        setupAccessibility()
         tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.shadowImage = UIImage()
-        navigationItem.rightBarButtonItem?.accessibilityLabel = "Setting"
+        navigationItem.rightBarButtonItem?.accessibilityLabel = NSLocalizedString("chordPicker.navigation-settings.accessibilityLabel", comment: "")
+    }
+    
+    private func setupAccessibility() {
+        
     }
     
     // Updating accessibility label for 'Choose Chord' button
@@ -43,7 +48,7 @@ class ChordPickerViewController: UIViewController {
         let quality = selectedRow(at: 1)
         let tension = selectedRow(at: 2)
         let item = viewModel.generateSelectedChord(root: root, quality: quality, tension: tension)
-        chooseButton.accessibilityLabel = "Choose Chord, " + item.accessibiltyLabel
+        chooseButton.accessibilityLabel = NSLocalizedString("chordPicker.button-choose.accessibilityLabel", comment: "") + item.accessibiltyLabel
     }
     
     // If this doesn't work, call this method in viewWillAppear

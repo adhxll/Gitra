@@ -21,59 +21,59 @@ class Database {
     // MARK: - Seeder Methods
     func seedNote() {
         noteList.append(ChordBase(value: "C", accessibility: "C", apiFormat: "C"))
-        noteList.append(ChordBase(value: "C♯", accessibility: "C Sharp", apiFormat: "Db"))
+        noteList.append(ChordBase(value: "C♯", accessibility: NSLocalizedString("chord-base.c-sharp", comment: ""), apiFormat: "Db"))
         noteList.append(ChordBase(value: "D", accessibility: "D", apiFormat: "D"))
-        noteList.append(ChordBase(value: "D♯", accessibility: "D Sharp", apiFormat: "Eb"))
+        noteList.append(ChordBase(value: "D♯", accessibility: NSLocalizedString("chord-base.d-sharp", comment: ""), apiFormat: "Eb"))
         noteList.append(ChordBase(value: "E", accessibility: "E", apiFormat: "E"))
         noteList.append(ChordBase(value: "F", accessibility: "F", apiFormat: "F"))
-        noteList.append(ChordBase(value: "F♯", accessibility: "F Sharp", apiFormat: "Gb"))
+        noteList.append(ChordBase(value: "F♯", accessibility: NSLocalizedString("chord-base.f-sharp", comment: ""), apiFormat: "Gb"))
         noteList.append(ChordBase(value: "G", accessibility: "G", apiFormat: "G"))
-        noteList.append(ChordBase(value: "G♯", accessibility: "G Sharp", apiFormat: "Ab"))
+        noteList.append(ChordBase(value: "G♯", accessibility: NSLocalizedString("chord-base.g-sharp", comment: ""), apiFormat: "Ab"))
         noteList.append(ChordBase(value: "A", accessibility: "A", apiFormat: "A"))
-        noteList.append(ChordBase(value: "A♯", accessibility: "A Sharp", apiFormat: "Bb"))
+        noteList.append(ChordBase(value: "A♯", accessibility: NSLocalizedString("chord-base.a-sharp", comment: ""), apiFormat: "Bb"))
         noteList.append(ChordBase(value: "B", accessibility: "B", apiFormat: "B"))
     }
     
     func seedChord() {
         let empty = ChordBase(value: "-", accessibility: "", apiFormat: "")
-        let second = ChordBase(value: "2", accessibility: "Second", apiFormat: "2")
-        let fourth = ChordBase(value: "4", accessibility: "Fourth", apiFormat: "4")
-        let sixth = ChordBase(value: "6", accessibility: "Sixth", apiFormat: "6")
-        let sixthNinth = ChordBase(value: "6", accessibility: "Sixth Nine", apiFormat: "69")
-        let seventh = ChordBase(value: "7", accessibility: "Seventh", apiFormat: "7")
-        let sevenSharpFifth = ChordBase(value: "7♯5", accessibility: "Seventh Sharp Fifth", apiFormat: "7#5")
-        let sevenFlatFifth = ChordBase(value: "7♭5", accessibility: "Seventh Flat Fifth", apiFormat: "7b5")
-        let sevenSharpNinth = ChordBase(value: "7♯9", accessibility: "Seventh Sharp Ninth", apiFormat: "7#9")
-        let sevenFlatNinth = ChordBase(value: "7♭9", accessibility: "Seventh Flat Ninth", apiFormat: "7b9")
-        let ninth = ChordBase(value: "9", accessibility: "Ninth", apiFormat: "9")
-        let eleventh = ChordBase(value: "11", accessibility: "Eleventh", apiFormat: "11")
+        let second = ChordBase(value: "2", accessibility: NSLocalizedString("chord-tension.second", comment: ""), apiFormat: "2")
+        let fourth = ChordBase(value: "4", accessibility: NSLocalizedString("chord-tension.fourth", comment: ""), apiFormat: "4")
+        let sixth = ChordBase(value: "6", accessibility: NSLocalizedString("chord-tension.sixth", comment: ""), apiFormat: "6")
+        let sixthNinth = ChordBase(value: "6/9", accessibility: NSLocalizedString("chord-tension.sixth-ninth", comment: ""), apiFormat: "69")
+        let seventh = ChordBase(value: "7", accessibility: NSLocalizedString("chord-tension.seventh", comment: ""), apiFormat: "7")
+        let sevenSharpFifth = ChordBase(value: "7♯5", accessibility: NSLocalizedString("chord-tension.seventh-sharp-fifth", comment: ""), apiFormat: "7#5")
+        let sevenFlatFifth = ChordBase(value: "7♭5", accessibility: NSLocalizedString("chord-tension.seventh-flat-fifth", comment: ""), apiFormat: "7b5")
+        let sevenSharpNinth = ChordBase(value: "7♯9", accessibility: NSLocalizedString("chord-tension.seventh-sharp-ninth", comment: ""), apiFormat: "7#9")
+        let sevenFlatNinth = ChordBase(value: "7♭9", accessibility: NSLocalizedString("chord-tension.seventh-flat-ninth", comment: ""), apiFormat: "7b9")
+        let ninth = ChordBase(value: "9", accessibility: NSLocalizedString("chord-tension.ninth", comment: ""), apiFormat: "9")
+        let eleventh = ChordBase(value: "11", accessibility: NSLocalizedString("chord-tension.eleventh", comment: ""), apiFormat: "11")
         
         chordList.append(ChordBase(value: "-",
                                    accessibility: "",
                                    apiFormat: "",
                                    child: [empty, sixth, sixthNinth, seventh, sevenSharpFifth, sevenFlatFifth, sevenSharpNinth, sevenFlatNinth, eleventh]))
         chordList.append(ChordBase(value: "Major",
-                                   accessibility: "Major",
+                                   accessibility: NSLocalizedString("chord-quality.major", comment: ""),
                                    apiFormat: "maj",
                                    child: [empty, sixth, sixthNinth, seventh, ninth, eleventh]))
         chordList.append(ChordBase(value: "Minor",
-                                   accessibility: "Minor",
+                                   accessibility: NSLocalizedString("chord-quality.minor", comment: ""),
                                    apiFormat: "m",
                                    child: [empty, sixth, sixthNinth, seventh, ninth, eleventh]))
         chordList.append(ChordBase(value: "Add",
-                                   accessibility: "Add",
+                                   accessibility: NSLocalizedString("chord-quality.add", comment: ""),
                                    apiFormat: "add",
                                    child: [ninth, eleventh]))
         chordList.append(ChordBase(value: "Sus",
-                                   accessibility: "Suspended",
+                                   accessibility: NSLocalizedString("chord-quality.sus", comment: ""),
                                    apiFormat: "sus",
                                    child: [second, fourth]))
         chordList.append(ChordBase(value: "Dim",
-                                   accessibility: "Diminished",
+                                   accessibility: NSLocalizedString("chord-quality.dim", comment: ""),
                                    apiFormat: "dim",
                                    child: [empty]))
         chordList.append(ChordBase(value: "Aug",
-                                   accessibility: "Augmented",
+                                   accessibility: NSLocalizedString("chord-quality.aug", comment: ""),
                                    apiFormat: "aug",
                                    child: [empty]))
     }

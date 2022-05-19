@@ -17,7 +17,6 @@ class ChordPickerViewModel {
     init() {
         self.selectedChord = PickerItemModel();
     }
-    
 }
 
 extension ChordPickerViewModel {

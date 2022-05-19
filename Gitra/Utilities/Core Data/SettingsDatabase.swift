@@ -4,6 +4,8 @@
 //  Created by Gilang Adrian on 11/06/21.
 //
 
+import Foundation
+
 enum SettingKey: String, CaseIterable {
     case inputMode
     case welcomeScreen
@@ -12,9 +14,8 @@ enum SettingKey: String, CaseIterable {
     
     // Needed for UISwitch Tag
     var index: Int {
-        var index = 0
-        for (_index, item) in SettingKey.allCases.enumerated() where item == self { index = _index }
-        return index
+        for (index, item) in SettingKey.allCases.enumerated() where item == self { return index }
+        return 0
     }
 }
 
@@ -47,44 +48,44 @@ class SettingsDatabase {
     private var settings: SettingMenu
     
     private let chordSpeedChild: [SettingMenu] = [
-        SettingMenu(title: "Slow", type: .checkmark),
-        SettingMenu(title: "Normal", type: .checkmark),
-        SettingMenu(title: "Fast", type: .checkmark)
+        SettingMenu(title: NSLocalizedString("settings.menu-speed.slow", comment: ""), type: .checkmark),
+        SettingMenu(title: NSLocalizedString("settings.menu-speed.normal", comment: ""), type: .checkmark),
+        SettingMenu(title: NSLocalizedString("settings.menu-speed.fast", comment: ""), type: .checkmark)
     ]
     
     private let instructionChild: [SettingMenu] = [
-        SettingMenu(title: "Voice Command Mode",
+        SettingMenu(title: NSLocalizedString("settings.menu-instruction-voiceCommandMode.title", comment: ""),
                     type: .disclosure,
                     child: [
-                        SettingMenu(title: "Wait until you can hear the cue to speak sound.", type: .description),
-                        SettingMenu(title: "Say which chord do you want to play (e.g. C Major), you will be directed into the chord detail page.", type: .description),
-                        SettingMenu(title: "On the chord detail page, say 'Next' if you want to go to the next string, and 'Repeat' if you want to repeat the note sound.", type: .description),
-                        SettingMenu(title: "There is a toolbar with 'Previous', 'Next', and 'Repeat' button on the bottom of the screen.", type: .description)
+                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-voiceCommandMode.first-instruction", comment: ""), type: .description),
+                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-voiceCommandMode.second-instruction", comment: ""), type: .description),
+                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-voiceCommandMode.third-instruction", comment: ""), type: .description),
+                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-voiceCommandMode.fourth-instruction", comment: ""), type: .description)
                     ]),
-        SettingMenu(title: "Picker Mode",
+        SettingMenu(title: NSLocalizedString("settings.menu-instruction-pickerMode.title", comment: ""),
                     type: .disclosure,
                     child: [
-                        SettingMenu(title: "If you are using picker mode, on the main page there will be a picker which you can adjust to find the chord you are looking for.", type: .description),
-                        SettingMenu(title: "There are 3 section that you can adjust, roots, quality, and tension.", type: .description),
-                        SettingMenu(title: "On the chord detail page, say 'Next' if you want to go to the next string, and 'Repeat' if you want to repeat the note sound.", type: .description),
-                        SettingMenu(title: "You can adjust the picker by swiping up or down on each section.", type: .description)
+                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-pickerMode.first-instruction", comment: ""), type: .description),
+                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-pickerMode.second-instruction", comment: ""), type: .description),
+                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-pickerMode.third-instruction", comment: ""), type: .description),
+                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-pickerMode.fourth-instruction", comment: ""), type: .description)
                     ]),
-        SettingMenu(title: "Automatic Tuner",
+        SettingMenu(title: NSLocalizedString("settings.menu-instruction-automaticTuner.title", comment: ""),
                     type: .disclosure,
                     child: [
-                        SettingMenu(title: "Press the start button in the middle of the screen to start the tuner.", type: .description),
-                        SettingMenu(title: "Pluck a string and hear the instructions on how to tune the selected string.", type: .description),
-                        SettingMenu(title: "Tune the string until you hear the sound cue, indicating that the string is tuned.", type: .description),
-                        SettingMenu(title: "Press the stop button in the middle of the screen to turn off the tuner.", type: .description)
+                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-automaticTuner.first-instruction", comment: ""), type: .description),
+                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-automaticTuner.second-instruction", comment: ""), type: .description),
+                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-automaticTuner.third-instruction", comment: ""), type: .description),
+                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-automaticTuner.fourth-instruction", comment: ""), type: .description)
                     ])]
     
     init() {
-        settings = SettingMenu(title: "Settings", type: .none, child: [
-            SettingMenu(title: "Welcome Screen", type: .toggle, saveKey: .welcomeScreen),
-            SettingMenu(title: "Input Command Guide", type: .toggle, saveKey: .inputCommand),
-            SettingMenu(title: "Chord Speed", type: .options, sectionFooter: "Determine the chord playback speed for the instruction mode. The default value is normal.", child: chordSpeedChild, saveKey: .chordSpeed),
-            SettingMenu(title: "Instructions", type: .disclosure, child: instructionChild),
-            SettingMenu(title: "App Version", type: .info)
+        settings = SettingMenu(title: NSLocalizedString("settings.menu-main.title", comment: ""), type: .none, child: [
+            SettingMenu(title: NSLocalizedString("settings.menu-welcome.title", comment: ""), type: .toggle, saveKey: .welcomeScreen),
+            SettingMenu(title: NSLocalizedString("settings.menu-command.title", comment: ""), type: .toggle, saveKey: .inputCommand),
+            SettingMenu(title: NSLocalizedString("settings.menu-speed.title", comment: ""), type: .options, sectionFooter: NSLocalizedString("settings.menu-speed.footer", comment: ""), child: chordSpeedChild, saveKey: .chordSpeed),
+            SettingMenu(title: NSLocalizedString("settings.menu-instructions.title", comment: ""), type: .disclosure, child: instructionChild),
+            SettingMenu(title: NSLocalizedString("settings.menu-appVersion.title", comment: ""), type: .info)
         ])
     }
 }

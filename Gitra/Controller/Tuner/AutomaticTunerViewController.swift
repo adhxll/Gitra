@@ -63,8 +63,11 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
                 statusLabel.text = tunerStatus.localizedString
             } else {
                 statusLabel.text = selectedString + " " + tunerStatus.localizedString
+                if shouldActiveVoiceOver {
+                    UIAccessibility.post(notification: .announcement, argument: statusLabel.text)
+                    shouldActiveVoiceOver = false
+                }
             }
-            UIAccessibility.post(notification: .announcement, argument: statusLabel.text)
         }
         willSet {
             // Only change the status to tunedIn if after 4s the tunerStatus value isn't changed, otherwise invalidate the timer
@@ -77,6 +80,8 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
                         }
                     }
                 }
+            } else if newValue != tunerStatus {
+                shouldActiveVoiceOver = true
             } else {
                 timer2?.invalidate()
                 timer2 = nil
@@ -88,12 +93,14 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
         willSet {
             // Everytime the selectedString value changed, invalidate the timer
             if newValue != selectedString {
+                shouldActiveVoiceOver = true
                 timer2?.invalidate()
                 timer2 = nil
             }
         }
     }
     
+    private var shouldActiveVoiceOver: Bool = false
     private var isStarted: Bool = false
     private var timer1: Timer?
     private var timer2: Timer?
@@ -134,7 +141,7 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
             tunerStatus = .idle
             startButton.setTitle(NSLocalizedString("automaticTuner.button-stop.title", comment: ""), for: .normal)
             differenceLabel.isHidden = false
-            startTimer()
+            /* startTimer() */
         } else {
             resetAllState()
         }
@@ -225,12 +232,14 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
         stringButtons.forEach({ $0.backgroundColor = .ColorLibrary.whiteAccent })
     }
     
-    func startTimer() {
-        timer1 = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: true) { [weak self] _ in
-            guard let weakSelf = self else { return }
-            UIAccessibility.post(notification: .announcement, argument: weakSelf.statusLabel.text)
-        }
-    }
+    /*
+     func startTimer() {
+         timer1 = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: true) { [weak self] _ in
+             guard let weakSelf = self else { return }
+             UIAccessibility.post(notification: .announcement, argument: weakSelf.statusLabel.text)
+         }
+     }
+     */
 }
 
 extension AutomaticTunerViewController: AutomaticTunerViewModelAction {

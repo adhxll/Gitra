@@ -35,7 +35,6 @@
 		745F5CCF280A7C7200F254B6 /* CustomSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745F5CCE280A7C7200F254B6 /* CustomSwitch.swift */; };
 		7485AE08280A93F20017FA45 /* AutomaticTunerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7485AE07280A93F20017FA45 /* AutomaticTunerViewModel.swift */; };
 		7485AE0A280A941E0017FA45 /* ChordPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7485AE09280A941E0017FA45 /* ChordPickerViewModel.swift */; };
-		7485AE0C280A987E0017FA45 /* ChordPickerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7485AE0B280A987E0017FA45 /* ChordPickerHelper.swift */; };
 		74C8464E2829E39E00584004 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 74C846502829E39E00584004 /* Localizable.strings */; };
 		79C7DC9F2673B224006D4104 /* SettingsDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C7DC9E2673B224006D4104 /* SettingsDatabase.swift */; };
 		7CC7CDD7266F491F001C0C9C /* OnBoardingAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7CDD6266F491F001C0C9C /* OnBoardingAnimation.swift */; };
@@ -147,7 +146,6 @@
 		745F5CCE280A7C7200F254B6 /* CustomSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSwitch.swift; sourceTree = "<group>"; };
 		7485AE07280A93F20017FA45 /* AutomaticTunerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomaticTunerViewModel.swift; sourceTree = "<group>"; };
 		7485AE09280A941E0017FA45 /* ChordPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordPickerViewModel.swift; sourceTree = "<group>"; };
-		7485AE0B280A987E0017FA45 /* ChordPickerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordPickerHelper.swift; sourceTree = "<group>"; };
 		74C8464F2829E39E00584004 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		74C846512829E3CA00584004 /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
 		79C7DC9E2673B224006D4104 /* SettingsDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDatabase.swift; sourceTree = "<group>"; };
@@ -375,7 +373,6 @@
 			children = (
 				522785D0266E5B04005BF33E /* ChordPickerViewController.swift */,
 				7485AE09280A941E0017FA45 /* ChordPickerViewModel.swift */,
-				7485AE0B280A987E0017FA45 /* ChordPickerHelper.swift */,
 			);
 			path = "Chord Picker";
 			sourceTree = "<group>";
@@ -724,7 +721,6 @@
 				90766B05267A67D000FFA576 /* SelectorViewController.swift in Sources */,
 				52EE72ED26726B2100B3E7EE /* SoundHelper.swift in Sources */,
 				5293C816266F346E00151BF7 /* ChordModel.swift in Sources */,
-				7485AE0C280A987E0017FA45 /* ChordPickerHelper.swift in Sources */,
 				BDE09EDD267721D0007E0878 /* RoundedButton.swift in Sources */,
 				90B0163F26710C490054ED9D /* Database.swift in Sources */,
 				52698D10266DE9D5004F7AD6 /* SceneDelegate.swift in Sources */,

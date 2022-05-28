@@ -78,7 +78,7 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
             // Only change the status to tunedIn if after 4s the tunerStatus value isn't changed, otherwise invalidate the timer
             if newValue == tunerStatus && tunerStatus == .analyzing {
                 if timer2 == nil {
-                    timer2 = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: false) { [weak self] _ in
+                    timer2 = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
                         guard let weakSelf = self else { return }
                         if (weakSelf.tunerStatus == .analyzing) {
                             weakSelf.tunerStatus = .tunedIn

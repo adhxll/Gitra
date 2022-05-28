@@ -63,13 +63,18 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
                 statusLabel.text = tunerStatus.localizedString
             } else {
                 statusLabel.text = selectedString + " " + tunerStatus.localizedString
-                if shouldActiveVoiceOver {
-                    UIAccessibility.post(notification: .announcement, argument: statusLabel.text)
-                    shouldActiveVoiceOver = false
-                }
+            }
+            
+            // Active voice over
+            if shouldActiveVoiceOver {
+                UIAccessibility.post(notification: .announcement, argument: statusLabel.text)
+                shouldActiveVoiceOver = false
             }
         }
         willSet {
+            // Active voice over on value change
+            shouldActiveVoiceOver = (newValue != tunerStatus)
+            
             // Only change the status to tunedIn if after 4s the tunerStatus value isn't changed, otherwise invalidate the timer
             if newValue == tunerStatus && tunerStatus == .analyzing {
                 if timer2 == nil {
@@ -80,8 +85,6 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
                         }
                     }
                 }
-            } else if newValue != tunerStatus {
-                shouldActiveVoiceOver = true
             } else {
                 timer2?.invalidate()
                 timer2 = nil
@@ -128,7 +131,7 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
     
     @IBAction func goToSetting(_ sender: Any) {
         let settingVC: SettingViewController = SettingViewController(settingVM: SettingViewModel())
-        self.navigationController?.pushViewController(settingVC, animated: true)
+        navigationController?.pushViewController(settingVC, animated: true)
     }
     
     @IBAction func startTuner(_ sender: Any) {
@@ -141,7 +144,6 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
             tunerStatus = .idle
             startButton.setTitle(NSLocalizedString("automaticTuner.button-stop.title", comment: ""), for: .normal)
             differenceLabel.isHidden = false
-            /* startTimer() */
         } else {
             resetAllState()
         }
@@ -167,7 +169,7 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
         do {
             try Settings.setSession(category: .playAndRecord, with: [.defaultToSpeaker, .allowBluetooth])
         } catch {
-            print("AudioKit session error")
+            print("AudioKit session error: \(error)")
         }
     }
     
@@ -195,7 +197,7 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
     }
     
     func resetAllState() {
-        self.conductor.stop()
+        conductor.stop()
         
         //Reset all elements to its inital state
         timer1?.invalidate()
@@ -231,15 +233,6 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
         // Set button color on the stack view
         stringButtons.forEach({ $0.backgroundColor = .ColorLibrary.whiteAccent })
     }
-    
-    /*
-     func startTimer() {
-         timer1 = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: true) { [weak self] _ in
-             guard let weakSelf = self else { return }
-             UIAccessibility.post(notification: .announcement, argument: weakSelf.statusLabel.text)
-         }
-     }
-     */
 }
 
 extension AutomaticTunerViewController: AutomaticTunerViewModelAction {

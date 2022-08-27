@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIKit
 
 struct ChordName {
     var title: String?
@@ -24,7 +23,7 @@ class Helper {
                  "A": ["a"],
                  "B": ["b", "bee", "be"]]
     let symbols = ["b": ["flat", "b", "♭"],
-                   "#": ["sharp", "#", "♯", "shark", "shack", "shirt"]]
+                     "#": ["sharp", "#", "♯", "shark", "shack", "shirt"]]
     let qualities = ["maj": ["major", "maj", "ranger"],
                      "m": ["minor", "min"],
                      "add": ["add"],
@@ -59,7 +58,7 @@ class Helper {
         output = checkRoot(splitChordInput[0])
         outputTitle = output
         outputAccessibility = output
-        
+
         //Determine chord root
         func checkRoot(_ text: String) -> String {
             for (notation, root) in roots {
@@ -83,7 +82,7 @@ class Helper {
             }
             return ("","")
         }
-        
+
         //Determine chord quality
         func checkQuality(_ text: String) -> (String, String) {
             for (notation, quality) in qualities {
@@ -95,7 +94,7 @@ class Helper {
             }
             return ("","")
         }
-        
+
         //Determine chord tension
         func checkTension(_ text: String) -> String {
             for (number, tension) in tensions {
@@ -165,7 +164,7 @@ class Helper {
             outputAccessibility.append(tension)
             
         }
-        
+            
         if output.contains("maj") && !output.contains("maj7") && (output.count == 5 || output.count == 6) {
             output.removeLast(4)
         }
@@ -185,26 +184,12 @@ class Helper {
     }
 }
 
-// MARK: - UIKit Extension
 extension String {
     func capitalizingFirstLetter() -> String {
-        return prefix(1).uppercased() + self.lowercased().dropFirst()
+      return prefix(1).uppercased() + self.lowercased().dropFirst()
     }
-    
-    mutating func capitalizeFirstLetter() {
-        self = self.capitalizingFirstLetter()
-    }
-}
 
-extension Bundle {
-    public var appName: String { getInfo("CFBundleName") }
-    public var displayName: String { getInfo("CFBundleDisplayName") }
-    public var language: String { getInfo("CFBundleDevelopmentRegion") }
-    public var identifier: String { getInfo("CFBundleIdentifier") }
-    public var copyright: String { getInfo("NSHumanReadableCopyright").replacingOccurrences(of: "\\\\n", with: "\n") }
-    
-    public var appBuild: String { getInfo("CFBundleVersion") }
-    public var appVersionLong: String { getInfo("CFBundleShortVersionString") }
-    
-    fileprivate func getInfo(_ str: String) -> String { infoDictionary?[str] as? String ?? "Not found." }
+    mutating func capitalizeFirstLetter() {
+      self = self.capitalizingFirstLetter()
+    }
 }

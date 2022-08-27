@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		522785A8266E579C005BF33E /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522785A7266E579C005BF33E /* NetworkManager.swift */; };
+		522785BA266E58FC005BF33E /* Setting.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 522785B9266E58FC005BF33E /* Setting.storyboard */; };
 		522785C0266E591B005BF33E /* ChordVoice.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 522785BF266E591B005BF33E /* ChordVoice.storyboard */; };
 		522785C3266E5925005BF33E /* ChordPicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 522785C2266E5925005BF33E /* ChordPicker.storyboard */; };
 		522785C6266E592E005BF33E /* ChordDetail.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 522785C5266E592E005BF33E /* ChordDetail.storyboard */; };
@@ -20,6 +21,7 @@
 		522785E8266E5D6B005BF33E /* ChordVoiceChord.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 522785E7266E5D6B005BF33E /* ChordVoiceChord.storyboard */; };
 		522785EB266E5D77005BF33E /* ChordVoiceTuner.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 522785EA266E5D77005BF33E /* ChordVoiceTuner.storyboard */; };
 		522785F6266E5F0C005BF33E /* ChordVoiceTunerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522785F5266E5F0C005BF33E /* ChordVoiceTunerViewController.swift */; };
+		522785FA266E5F36005BF33E /* ChordPickerTunerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522785F9266E5F36005BF33E /* ChordPickerTunerViewController.swift */; };
 		52698D0E266DE9D5004F7AD6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52698D0D266DE9D5004F7AD6 /* AppDelegate.swift */; };
 		52698D10266DE9D5004F7AD6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52698D0F266DE9D5004F7AD6 /* SceneDelegate.swift */; };
 		52698D15266DE9D5004F7AD6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52698D13266DE9D5004F7AD6 /* Main.storyboard */; };
@@ -31,11 +33,6 @@
 		52C517DA267121A6002B5136 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 52C517D9267121A6002B5136 /* Lottie */; };
 		52EE72E226724D5500B3E7EE /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52EE72E126724D5500B3E7EE /* Helper.swift */; };
 		52EE72ED26726B2100B3E7EE /* SoundHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52EE72EC26726B2100B3E7EE /* SoundHelper.swift */; };
-		745F5CCD280A21FE00F254B6 /* SettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745F5CCC280A21FE00F254B6 /* SettingTableViewCell.swift */; };
-		745F5CCF280A7C7200F254B6 /* CustomSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745F5CCE280A7C7200F254B6 /* CustomSwitch.swift */; };
-		7485AE08280A93F20017FA45 /* AutomaticTunerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7485AE07280A93F20017FA45 /* AutomaticTunerViewModel.swift */; };
-		7485AE0A280A941E0017FA45 /* ChordPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7485AE09280A941E0017FA45 /* ChordPickerViewModel.swift */; };
-		74C8464E2829E39E00584004 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 74C846502829E39E00584004 /* Localizable.strings */; };
 		79C7DC9F2673B224006D4104 /* SettingsDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79C7DC9E2673B224006D4104 /* SettingsDatabase.swift */; };
 		7CC7CDD7266F491F001C0C9C /* OnBoardingAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC7CDD6266F491F001C0C9C /* OnBoardingAnimation.swift */; };
 		9028B9BC267E286600A14BAC /* loading-animation-2.json in Resources */ = {isa = PBXBuildFile; fileRef = 9028B9BA267E286600A14BAC /* loading-animation-2.json */; };
@@ -96,10 +93,12 @@
 		90766B03267A637C00FFA576 /* circle-grow-2.json in Resources */ = {isa = PBXBuildFile; fileRef = 90766B02267A637C00FFA576 /* circle-grow-2.json */; };
 		90766B05267A67D000FFA576 /* SelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90766B04267A67D000FFA576 /* SelectorViewController.swift */; };
 		90799B65267A7D3D0050B25C /* OnboardingHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90799B64267A7D3D0050B25C /* OnboardingHandler.swift */; };
-		90B0163D2671085A0054ED9D /* ChordBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B0163C2671085A0054ED9D /* ChordBase.swift */; };
+		90B0163D2671085A0054ED9D /* ChordQuality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B0163C2671085A0054ED9D /* ChordQuality.swift */; };
 		90B0163F26710C490054ED9D /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B0163E26710C490054ED9D /* Database.swift */; };
-		90BF406027FBDE7B00ED53E3 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BA3CD7267A2F3C004F1804 /* SettingViewController.swift */; };
-		90BF406227FBE30500ED53E3 /* SettingMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BF406127FBE30500ED53E3 /* SettingMenuViewModel.swift */; };
+		90BA3CD3267A2EA4004F1804 /* InstructionListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BA3CCE267A2EA4004F1804 /* InstructionListTableViewCell.swift */; };
+		90BA3CD4267A2EA4004F1804 /* InstructionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BA3CCF267A2EA4004F1804 /* InstructionViewController.swift */; };
+		90BA3CD5267A2EA4004F1804 /* SettingListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BA3CD0267A2EA4004F1804 /* SettingListViewController.swift */; };
+		90BA3CD8267A2F3C004F1804 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90BA3CD7267A2F3C004F1804 /* SettingViewController.swift */; };
 		90CD99972676106400464E25 /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 90CD99962676106400464E25 /* AudioKit */; };
 		90CD999A2676107E00464E25 /* SoundpipeAudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 90CD99992676107E00464E25 /* SoundpipeAudioKit */; };
 		90CD999F267610F000464E25 /* AutomaticTunerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CD999E267610F000464E25 /* AutomaticTunerViewController.swift */; };
@@ -118,6 +117,7 @@
 
 /* Begin PBXFileReference section */
 		522785A7266E579C005BF33E /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		522785B9266E58FC005BF33E /* Setting.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Setting.storyboard; sourceTree = "<group>"; };
 		522785BF266E591B005BF33E /* ChordVoice.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChordVoice.storyboard; sourceTree = "<group>"; };
 		522785C2266E5925005BF33E /* ChordPicker.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChordPicker.storyboard; sourceTree = "<group>"; };
 		522785C5266E592E005BF33E /* ChordDetail.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChordDetail.storyboard; sourceTree = "<group>"; };
@@ -130,6 +130,7 @@
 		522785E7266E5D6B005BF33E /* ChordVoiceChord.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChordVoiceChord.storyboard; sourceTree = "<group>"; };
 		522785EA266E5D77005BF33E /* ChordVoiceTuner.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChordVoiceTuner.storyboard; sourceTree = "<group>"; };
 		522785F5266E5F0C005BF33E /* ChordVoiceTunerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordVoiceTunerViewController.swift; sourceTree = "<group>"; };
+		522785F9266E5F36005BF33E /* ChordPickerTunerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordPickerTunerViewController.swift; sourceTree = "<group>"; };
 		52698D0A266DE9D5004F7AD6 /* Gitra.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gitra.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52698D0D266DE9D5004F7AD6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		52698D0F266DE9D5004F7AD6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -142,12 +143,6 @@
 		5293C815266F346E00151BF7 /* ChordModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordModel.swift; sourceTree = "<group>"; };
 		52EE72E126724D5500B3E7EE /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		52EE72EC26726B2100B3E7EE /* SoundHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundHelper.swift; sourceTree = "<group>"; };
-		745F5CCC280A21FE00F254B6 /* SettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingTableViewCell.swift; sourceTree = "<group>"; };
-		745F5CCE280A7C7200F254B6 /* CustomSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSwitch.swift; sourceTree = "<group>"; };
-		7485AE07280A93F20017FA45 /* AutomaticTunerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomaticTunerViewModel.swift; sourceTree = "<group>"; };
-		7485AE09280A941E0017FA45 /* ChordPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordPickerViewModel.swift; sourceTree = "<group>"; };
-		74C8464F2829E39E00584004 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		74C846512829E3CA00584004 /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
 		79C7DC9E2673B224006D4104 /* SettingsDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsDatabase.swift; sourceTree = "<group>"; };
 		7CC7CDD6266F491F001C0C9C /* OnBoardingAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnBoardingAnimation.swift; sourceTree = "<group>"; };
 		9028B9BA267E286600A14BAC /* loading-animation-2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "loading-animation-2.json"; sourceTree = "<group>"; };
@@ -208,10 +203,13 @@
 		90766B02267A637C00FFA576 /* circle-grow-2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "circle-grow-2.json"; sourceTree = "<group>"; };
 		90766B04267A67D000FFA576 /* SelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorViewController.swift; sourceTree = "<group>"; };
 		90799B64267A7D3D0050B25C /* OnboardingHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingHandler.swift; sourceTree = "<group>"; };
-		90B0163C2671085A0054ED9D /* ChordBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordBase.swift; sourceTree = "<group>"; };
+		90B0163C2671085A0054ED9D /* ChordQuality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChordQuality.swift; sourceTree = "<group>"; };
 		90B0163E26710C490054ED9D /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
+		90BA3CCD267A2EA4004F1804 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		90BA3CCE267A2EA4004F1804 /* InstructionListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionListTableViewCell.swift; sourceTree = "<group>"; };
+		90BA3CCF267A2EA4004F1804 /* InstructionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionViewController.swift; sourceTree = "<group>"; };
+		90BA3CD0267A2EA4004F1804 /* SettingListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingListViewController.swift; sourceTree = "<group>"; };
 		90BA3CD7267A2F3C004F1804 /* SettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
-		90BF406127FBE30500ED53E3 /* SettingMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingMenuViewModel.swift; sourceTree = "<group>"; };
 		90CD999E267610F000464E25 /* AutomaticTunerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomaticTunerViewController.swift; sourceTree = "<group>"; };
 		90CD99A0267611C600464E25 /* TunerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunerData.swift; sourceTree = "<group>"; };
 		90CD99A2267689D700464E25 /* TunerConductor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunerConductor.swift; sourceTree = "<group>"; };
@@ -248,7 +246,6 @@
 				BD8BC1F72671B0C700A49D44 /* Colors */,
 				BD9EE8AE266E3CF80081B951 /* Fonts */,
 				BDE09EDC267721D0007E0878 /* RoundedButton.swift */,
-				745F5CCE280A7C7200F254B6 /* CustomSwitch.swift */,
 			);
 			path = Theme;
 			sourceTree = "<group>";
@@ -317,7 +314,7 @@
 				D8355D742677925C00F2D718 /* FingerIndicator.swift */,
 				52698D16266DE9D5004F7AD6 /* Gitra.xcdatamodeld */,
 				5293C815266F346E00151BF7 /* ChordModel.swift */,
-				90B0163C2671085A0054ED9D /* ChordBase.swift */,
+				90B0163C2671085A0054ED9D /* ChordQuality.swift */,
 				90B0163E26710C490054ED9D /* Database.swift */,
 				90CD99A0267611C600464E25 /* TunerData.swift */,
 				90CD99A42676931100464E25 /* NoteFrequency.swift */,
@@ -345,6 +342,7 @@
 				522785E0266E5CE4005BF33E /* ChordPickerTuner.storyboard */,
 				522785E4266E5D2F005BF33E /* ChordPickerChord.storyboard */,
 				522785C5266E592E005BF33E /* ChordDetail.storyboard */,
+				522785B9266E58FC005BF33E /* Setting.storyboard */,
 				90766AFE267A5A1700FFA576 /* AutomaticTuner.storyboard */,
 			);
 			path = Storyboard;
@@ -372,7 +370,7 @@
 			isa = PBXGroup;
 			children = (
 				522785D0266E5B04005BF33E /* ChordPickerViewController.swift */,
-				7485AE09280A941E0017FA45 /* ChordPickerViewModel.swift */,
+				522785F9266E5F36005BF33E /* ChordPickerTunerViewController.swift */,
 			);
 			path = "Chord Picker";
 			sourceTree = "<group>";
@@ -388,9 +386,11 @@
 		522785FE266E5F6A005BF33E /* Setting */ = {
 			isa = PBXGroup;
 			children = (
-				90BF406427FC7A6B00ED53E3 /* Cell */,
-				90BF406327FBE31300ED53E3 /* View Model */,
+				90BA3CCE267A2EA4004F1804 /* InstructionListTableViewCell.swift */,
+				90BA3CCF267A2EA4004F1804 /* InstructionViewController.swift */,
+				90BA3CD0267A2EA4004F1804 /* SettingListViewController.swift */,
 				90BA3CD7267A2F3C004F1804 /* SettingViewController.swift */,
+				90BA3CCD267A2EA4004F1804 /* SettingViewController.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -425,7 +425,6 @@
 				52698D0F266DE9D5004F7AD6 /* SceneDelegate.swift */,
 				52698D19266DE9D8004F7AD6 /* Assets.xcassets */,
 				52698D1B266DE9D8004F7AD6 /* LaunchScreen.storyboard */,
-				74C846502829E39E00584004 /* Localizable.strings */,
 				52698D1E266DE9D8004F7AD6 /* Info.plist */,
 			);
 			path = Gitra;
@@ -499,27 +498,10 @@
 			path = JSON;
 			sourceTree = "<group>";
 		};
-		90BF406327FBE31300ED53E3 /* View Model */ = {
-			isa = PBXGroup;
-			children = (
-				90BF406127FBE30500ED53E3 /* SettingMenuViewModel.swift */,
-			);
-			path = "View Model";
-			sourceTree = "<group>";
-		};
-		90BF406427FC7A6B00ED53E3 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				745F5CCC280A21FE00F254B6 /* SettingTableViewCell.swift */,
-			);
-			path = Cell;
-			sourceTree = "<group>";
-		};
 		90CD999D267610D600464E25 /* Tuner */ = {
 			isa = PBXGroup;
 			children = (
 				90CD999E267610F000464E25 /* AutomaticTunerViewController.swift */,
-				7485AE07280A93F20017FA45 /* AutomaticTunerViewModel.swift */,
 			);
 			path = Tuner;
 			sourceTree = "<group>";
@@ -590,7 +572,6 @@
 			knownRegions = (
 				en,
 				Base,
-				id,
 			);
 			mainGroup = 52698D01266DE9D5004F7AD6;
 			packageReferences = (
@@ -652,12 +633,12 @@
 				90766AFF267A5A1700FFA576 /* AutomaticTuner.storyboard in Resources */,
 				904DC642267258DC00DD799E /* G2.mp3 in Resources */,
 				9028B9BC267E286600A14BAC /* loading-animation-2.json in Resources */,
+				522785BA266E58FC005BF33E /* Setting.storyboard in Resources */,
 				BD9EE8B3266E3D2B0081B951 /* Product Sans Italic.ttf in Resources */,
 				904DC64A267258DC00DD799E /* B4.mp3 in Resources */,
 				904DC640267258DC00DD799E /* B2.mp3 in Resources */,
 				904DC63D267258DC00DD799E /* F2.mp3 in Resources */,
 				904DC637267258DC00DD799E /* C3.mp3 in Resources */,
-				74C8464E2829E39E00584004 /* Localizable.strings in Resources */,
 				522785E8266E5D6B005BF33E /* ChordVoiceChord.storyboard in Resources */,
 				9028B9BD267E286600A14BAC /* loading-animation-1.json in Resources */,
 				904DC649267258DC00DD799E /* G#5.mp3 in Resources */,
@@ -692,7 +673,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				90BF406027FBDE7B00ED53E3 /* SettingViewController.swift in Sources */,
 				522785A8266E579C005BF33E /* NetworkManager.swift in Sources */,
 				BD8BC1F92671B0E800A49D44 /* ColorLibrary.swift in Sources */,
 				904DC65E2672EB6A00DD799E /* NotesMapping.swift in Sources */,
@@ -702,22 +682,21 @@
 				522785CA266E5AC2005BF33E /* OnBoardingViewController.swift in Sources */,
 				90CD99A3267689D700464E25 /* TunerConductor.swift in Sources */,
 				52698D18266DE9D5004F7AD6 /* Gitra.xcdatamodeld in Sources */,
-				745F5CCD280A21FE00F254B6 /* SettingTableViewCell.swift in Sources */,
-				745F5CCF280A7C7200F254B6 /* CustomSwitch.swift in Sources */,
 				7CC7CDD7266F491F001C0C9C /* OnBoardingAnimation.swift in Sources */,
-				7485AE0A280A941E0017FA45 /* ChordPickerViewModel.swift in Sources */,
 				D8355D752677925C00F2D718 /* FingerIndicator.swift in Sources */,
 				90799B65267A7D3D0050B25C /* OnboardingHandler.swift in Sources */,
 				522785D4266E5B0D005BF33E /* ChordDetailViewController.swift in Sources */,
 				79C7DC9F2673B224006D4104 /* SettingsDatabase.swift in Sources */,
-				7485AE08280A93F20017FA45 /* AutomaticTunerViewModel.swift in Sources */,
 				BD9EE8BA266E46C90081B951 /* GradientView.swift in Sources */,
 				52EE72E226724D5500B3E7EE /* Helper.swift in Sources */,
-				90B0163D2671085A0054ED9D /* ChordBase.swift in Sources */,
+				90B0163D2671085A0054ED9D /* ChordQuality.swift in Sources */,
+				90BA3CD4267A2EA4004F1804 /* InstructionViewController.swift in Sources */,
 				52698D0E266DE9D5004F7AD6 /* AppDelegate.swift in Sources */,
 				5293C813266F339100151BF7 /* ChordResponse.swift in Sources */,
+				90BA3CD8267A2F3C004F1804 /* SettingViewController.swift in Sources */,
+				522785FA266E5F36005BF33E /* ChordPickerTunerViewController.swift in Sources */,
 				522785F6266E5F0C005BF33E /* ChordVoiceTunerViewController.swift in Sources */,
-				90BF406227FBE30500ED53E3 /* SettingMenuViewModel.swift in Sources */,
+				90BA3CD3267A2EA4004F1804 /* InstructionListTableViewCell.swift in Sources */,
 				90766B05267A67D000FFA576 /* SelectorViewController.swift in Sources */,
 				52EE72ED26726B2100B3E7EE /* SoundHelper.swift in Sources */,
 				5293C816266F346E00151BF7 /* ChordModel.swift in Sources */,
@@ -725,6 +704,7 @@
 				90B0163F26710C490054ED9D /* Database.swift in Sources */,
 				52698D10266DE9D5004F7AD6 /* SceneDelegate.swift in Sources */,
 				522785CE266E5AFA005BF33E /* ChordVoiceViewController.swift in Sources */,
+				90BA3CD5267A2EA4004F1804 /* SettingListViewController.swift in Sources */,
 				522785D1266E5B04005BF33E /* ChordPickerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -748,15 +728,6 @@
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
-		74C846502829E39E00584004 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				74C8464F2829E39E00584004 /* en */,
-				74C846512829E3CA00584004 /* id */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -764,7 +735,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -826,7 +796,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -885,7 +854,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = J67YZ55T2G;
+				DEVELOPMENT_TEAM = 37PZ9N9MY5;
 				INFOPLIST_FILE = Gitra/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -907,7 +876,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = J67YZ55T2G;
+				DEVELOPMENT_TEAM = 37PZ9N9MY5;
 				INFOPLIST_FILE = Gitra/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (

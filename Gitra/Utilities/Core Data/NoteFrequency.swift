@@ -14,12 +14,4 @@ enum NoteFrequency: Float, CaseIterable {
     case string4 = 146.83 //D3 -> C3 - E3
     case string5 = 110.00 //A2 -> G2 - B2
     case string6 = 82.41 //E2 -> D2 - F#2
-    
-    var stringValue: String {
-        let stringArray = ["e", "b", "g", "d", "a", "e"]
-        for (index, item) in NoteFrequency.allCases.enumerated() where item == self {
-            return NSLocalizedString("string-" + stringArray[index], comment: "")
-        }
-        return ""
-    }
 }

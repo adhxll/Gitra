@@ -6,94 +6,58 @@
 
 import Foundation
 
-enum SettingKey: String, CaseIterable {
-    case inputMode
-    case welcomeScreen
-    case inputCommand
-    case chordSpeed
-    
-    // Needed for UISwitch Tag
-    var index: Int {
-        for (index, item) in SettingKey.allCases.enumerated() where item == self { return index }
-        return 0
-    }
-}
-
-enum SettingType {
+enum TypeSetting {
     case toggle
-    case disclosure
-    case options
-    case checkmark
+    case click
     case description
-    case info
-    case none
 }
 
-struct SettingMenu {
-    let title: String
-    let type: SettingType
-    
-    var pageTitle: String?
-    var sectionHeader: String?
-    var sectionFooter: String?
-    
-    var child: [SettingMenu]?
-    var saveKey: SettingKey?
-    var value: Int?
+struct SettingsType {
+    var titleSettings : String?
+    var type : TypeSetting?
+    var selected : Int?
+    var menu : [String]?
 }
 
-class SettingsDatabase {
+class SettingsDatabase{
     static let shared = SettingsDatabase()
     
-    private var settings: SettingMenu
+    var inputModes: Int?
+    var welcomeScreen: Int?
+    var inputCommand: Int?
+    var chordSpeed: Int?
     
-    private let chordSpeedChild: [SettingMenu] = [
-        SettingMenu(title: NSLocalizedString("settings.menu-speed.slow", comment: ""), type: .checkmark),
-        SettingMenu(title: NSLocalizedString("settings.menu-speed.normal", comment: ""), type: .checkmark),
-        SettingMenu(title: NSLocalizedString("settings.menu-speed.fast", comment: ""), type: .checkmark)
-    ]
-    
-    private let instructionChild: [SettingMenu] = [
-        SettingMenu(title: NSLocalizedString("settings.menu-instruction-voiceCommandMode.title", comment: ""),
-                    type: .disclosure,
-                    child: [
-                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-voiceCommandMode.first-instruction", comment: ""), type: .description),
-                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-voiceCommandMode.second-instruction", comment: ""), type: .description),
-                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-voiceCommandMode.third-instruction", comment: ""), type: .description),
-                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-voiceCommandMode.fourth-instruction", comment: ""), type: .description)
-                    ]),
-        SettingMenu(title: NSLocalizedString("settings.menu-instruction-pickerMode.title", comment: ""),
-                    type: .disclosure,
-                    child: [
-                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-pickerMode.first-instruction", comment: ""), type: .description),
-                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-pickerMode.second-instruction", comment: ""), type: .description),
-                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-pickerMode.third-instruction", comment: ""), type: .description),
-                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-pickerMode.fourth-instruction", comment: ""), type: .description)
-                    ]),
-        SettingMenu(title: NSLocalizedString("settings.menu-instruction-automaticTuner.title", comment: ""),
-                    type: .disclosure,
-                    child: [
-                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-automaticTuner.first-instruction", comment: ""), type: .description),
-                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-automaticTuner.second-instruction", comment: ""), type: .description),
-                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-automaticTuner.third-instruction", comment: ""), type: .description),
-                        SettingMenu(title: NSLocalizedString("settings.menu-instruction-automaticTuner.fourth-instruction", comment: ""), type: .description)
-                    ])]
+    private var settings = [SettingsType]()
     
     init() {
-        settings = SettingMenu(title: NSLocalizedString("settings.menu-main.title", comment: ""), type: .none, child: [
-            SettingMenu(title: NSLocalizedString("settings.menu-welcome.title", comment: ""), type: .toggle, saveKey: .welcomeScreen),
-            SettingMenu(title: NSLocalizedString("settings.menu-command.title", comment: ""), type: .toggle, saveKey: .inputCommand),
-            SettingMenu(title: NSLocalizedString("settings.menu-speed.title", comment: ""), type: .options, sectionFooter: NSLocalizedString("settings.menu-speed.footer", comment: ""), child: chordSpeedChild, saveKey: .chordSpeed),
-            SettingMenu(title: NSLocalizedString("settings.menu-instructions.title", comment: ""), type: .disclosure, child: instructionChild),
-            SettingMenu(title: NSLocalizedString("settings.menu-appVersion.title", comment: ""), type: .info)
-        ])
+        self.inputModes = UserDefaults.standard.integer(forKey: "inputMode")
+        self.welcomeScreen = UserDefaults.standard.integer(forKey: "welcomeScreen")
+        self.inputCommand = UserDefaults.standard.integer(forKey: "inputCommand")
+        self.chordSpeed = UserDefaults.standard.integer(forKey: "chordSpeed")
+        
+        settings = [
+//            SettingsType(titleSettings: "Chord Input Mode", type: .description, selected: inputModes, menu: ["Voice Command", "Picker"]),
+                    SettingsType(titleSettings: "Welcome Screen", type: .toggle, selected: welcomeScreen),
+                    SettingsType(titleSettings: "Input Command Guides", type: .toggle, selected: inputCommand),
+                    SettingsType(titleSettings: "Chord Speed", type: .description, selected: chordSpeed, menu: ["Slow", "Normal", "Fast"]),
+                    SettingsType(titleSettings: "Instructions", type: .click, menu: ["Voice Command Mode", "Picker Mode", "Automatic Tuner"])]
     }
-}
-
-extension SettingsDatabase {
     
-    func getSettings() -> SettingMenu {
+    func reloadDatabase(){
+        self.inputModes = UserDefaults.standard.integer(forKey: "inputMode")
+        self.welcomeScreen = UserDefaults.standard.integer(forKey: "welcomeScreen")
+        self.inputCommand = UserDefaults.standard.integer(forKey: "inputCommand")
+        self.chordSpeed = UserDefaults.standard.integer(forKey: "chordSpeed")
+        
+        settings = [
+//            SettingsType(titleSettings: "Chord Input Mode", type: .description, selected: inputModes, menu: ["Voice Command", "Picker"]),
+                    SettingsType(titleSettings: "Welcome Screen", type: .toggle, selected: welcomeScreen),
+                    SettingsType(titleSettings: "Input Command Guides", type: .toggle, selected: inputCommand),
+                    SettingsType(titleSettings: "Chord Speed", type: .description, selected: chordSpeed, menu: ["Slow", "Normal", "Fast"]),
+                    SettingsType(titleSettings: "Instructions", type: .click, menu: ["Voice Command Mode", "Picker Mode", "Automatic Tuner"])]
+    }
+    
+    func getSettings() -> [SettingsType] {
         return settings
     }
-    
 }

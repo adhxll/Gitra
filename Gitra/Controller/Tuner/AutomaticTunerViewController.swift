@@ -8,58 +8,174 @@
 import UIKit
 import AudioKit
 
+enum AutomaticTunerStatus {
+    case initial
+    case idle
+    case analyzing
+    case tunedIn
+    case tooFlat
+    case tooSharp
+    
+    var localizedString: String {
+        switch self {
+        case .initial:
+            return NSLocalizedString("automaticTuner.status-label-initial.title", comment: "")
+        case .analyzing:
+            return NSLocalizedString("automaticTuner.status-label-hold.title", comment: "")
+        case .tunedIn:
+            return NSLocalizedString("automaticTuner.status-label-match.title", comment: "")
+        case .tooFlat:
+            return NSLocalizedString("automaticTuner.status-label-too-flat.title", comment: "")
+        case .tooSharp:
+            return NSLocalizedString("automaticTuner.status-label-too-sharp.title", comment: "")
+        case .idle:
+            return ""
+        }
+    }
+}
+
 class AutomaticTunerViewController: UIViewController, TunerDelegate {
     
-    @IBOutlet var strings: [UIButton]!
-    @IBOutlet weak var viewIndicator: UIView!
+    @IBOutlet var stringButtons: [UIButton]!
+    @IBOutlet weak var tunerIndicatorView: UIView!
     @IBOutlet weak var differenceLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var startButton: UIButton!
     
-    var conductor = TunerConductor()
-    var indicatorCircle: CAShapeLayer?
-    var backgroundCircle: CAShapeLayer?
-    var start = false
-    var selectedString = ""
-    var timer1: Timer?
-    var timer2: Timer?
-    var tempKey = ""
-    var newKey = ""
+    private let conductor: TunerConductor = TunerConductor()
+    private let viewModel: AutomaticTunerViewModel = AutomaticTunerViewModel()
     
-    override func viewWillAppear(_ animated: Bool) {
-        
-        UINavigationBar.appearance().isTranslucent = false
-        navigationController?.navigationBar.shadowImage = UIImage()
-        self.tabBarController?.tabBar.isHidden = false
-        self.extendedLayoutIncludesOpaqueBars = true
-        
-        do {
-            try Settings.setSession(category: .playAndRecord, with: [.defaultToSpeaker, .allowBluetooth])
-        } catch {
-            print("AudioKit error")
+    private let indicatorCircleShapeLayer: CAShapeLayer = {
+        let shape = CAShapeLayer()
+        shape.fillColor = UIColor.ColorLibrary.yellowAccent.cgColor
+        return shape
+    }()
+    
+    private let backgroundCircleShapeLayer: CAShapeLayer = {
+        let shape = CAShapeLayer()
+        shape.fillColor = UIColor.systemGray6.cgColor
+        return shape
+    }()
+    
+    private var tunerStatus: AutomaticTunerStatus = .initial {
+        didSet {
+            if tunerStatus == .initial || tunerStatus == .idle || tunerStatus == .analyzing {
+                statusLabel.text = tunerStatus.localizedString
+            } else {
+                statusLabel.text = selectedString + " " + tunerStatus.localizedString
+            }
+            
+            // Active voice over
+            if shouldActiveVoiceOver {
+                UIAccessibility.post(notification: .announcement, argument: statusLabel.text)
+                shouldActiveVoiceOver = false
+            }
+        }
+        willSet {
+            // Active voice over on value change
+            shouldActiveVoiceOver = (newValue != tunerStatus)
+            
+            // Only change the status to tunedIn if after 4s the tunerStatus value isn't changed, otherwise invalidate the timer
+            if newValue == tunerStatus && tunerStatus == .analyzing {
+                if timer2 == nil {
+                    timer2 = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
+                        guard let weakSelf = self else { return }
+                        if (weakSelf.tunerStatus == .analyzing) {
+                            weakSelf.tunerStatus = .tunedIn
+                        }
+                    }
+                }
+            } else {
+                timer2?.invalidate()
+                timer2 = nil
+            }
         }
     }
     
-    //Detect status changes
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if keyPath == "text" {
-            if (change?[.oldKey] as! String) != (change?[.newKey] as! String) {
-                UIAccessibility.post(notification: .announcement, argument: statusLabel.text)
+    private var selectedString: String = "" {
+        willSet {
+            // Everytime the selectedString value changed, invalidate the timer
+            if newValue != selectedString {
+                shouldActiveVoiceOver = true
+                timer2?.invalidate()
+                timer2 = nil
             }
-            tempKey = (change?[.oldKey] as! String)
-            newKey = (change?[.newKey] as! String)
         }
+    }
+    
+    private var shouldActiveVoiceOver: Bool = false
+    private var isStarted: Bool = false
+    private var timer1: Timer?
+    private var timer2: Timer?
+    
+    // MARK: - Private Methods
+    
+    override func viewWillAppear(_ animated: Bool) {
+        setupNavigationBar()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-            
+        viewModel.action = self
         conductor.delegate = self
         
-        statusLabel.addObserver(self, forKeyPath: "text", options: [.old, .new], context: nil)
-        
+        setupView()
+        setupAudioSession()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        resetAllState()
+    }
+    
+    // MARK: - IBAction
+    
+    @IBAction func goToSetting(_ sender: Any) {
+        let settingVC: SettingViewController = SettingViewController(settingVM: SettingViewModel())
+        navigationController?.pushViewController(settingVC, animated: true)
+    }
+    
+    @IBAction func startTuner(_ sender: Any) {
+        if !isStarted {
+            self.conductor.start()
+            
+            UIAccessibility.post(notification: .announcement, argument: NSLocalizedString("automaticTuner.conductor-start", comment: ""))
+            
+            isStarted = true
+            tunerStatus = .idle
+            startButton.setTitle(NSLocalizedString("automaticTuner.button-stop.title", comment: ""), for: .normal)
+            differenceLabel.isHidden = false
+        } else {
+            resetAllState()
+        }
+    }
+    
+    @IBAction func buttonSelected(_ sender: UIButton) {
+        setDefaultButton()
+        let setFrequency: NoteFrequency = NoteFrequency.allCases[sender.tag]
+        conductor.noteFrequency = setFrequency.rawValue
+        sender.backgroundColor = .ColorLibrary.yellowAccent
+    }
+    
+    // MARK: - Internal Methods
+    
+    func setupNavigationBar() {
+        UINavigationBar.appearance().isTranslucent = false
+        navigationController?.navigationBar.shadowImage = UIImage()
+        self.tabBarController?.tabBar.isHidden = false
+        self.extendedLayoutIncludesOpaqueBars = true
+    }
+    
+    func setupAudioSession() {
+        do {
+            try Settings.setSession(category: .playAndRecord, with: [.defaultToSpeaker, .allowBluetooth])
+        } catch {
+            print("AudioKit session error: \(error)")
+        }
+    }
+    
+    func setupView() {
         //Set button tag and style
-        for (index, button) in strings.enumerated() {
+        for (index, button) in stringButtons.enumerated() {
             button.tag = index
             button.layer.cornerRadius = button.frame.height / 2
             button.layer.masksToBounds = true
@@ -70,174 +186,79 @@ class AutomaticTunerViewController: UIViewController, TunerDelegate {
         differenceLabel.layer.masksToBounds = true
         
         //Define background circle
-        backgroundCircle = CAShapeLayer()
-        backgroundCircle?.path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: viewIndicator.frame.width, height: viewIndicator.frame.height)).cgPath
-        backgroundCircle?.fillColor = UIColor.systemGray6.cgColor
+        backgroundCircleShapeLayer.path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: tunerIndicatorView.frame.width, height: tunerIndicatorView.frame.height)).cgPath
         
         //Define indicator circle
-        indicatorCircle = CAShapeLayer()
-        indicatorCircle?.path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: viewIndicator.frame.width, height: viewIndicator.frame.height)).cgPath
-        indicatorCircle?.fillColor = UIColor.ColorLibrary.yellowAccent.cgColor
+        indicatorCircleShapeLayer.path = UIBezierPath(ovalIn: CGRect(x: 0, y: 0, width: tunerIndicatorView.frame.width, height: tunerIndicatorView.frame.height)).cgPath
         
         //Add background & indicator as view sublayer
-        viewIndicator.layer.insertSublayer(backgroundCircle!, at: 0)
-        viewIndicator.layer.insertSublayer(indicatorCircle!, at: 1)
+        tunerIndicatorView.layer.insertSublayer(backgroundCircleShapeLayer, at: 0)
+        tunerIndicatorView.layer.insertSublayer(indicatorCircleShapeLayer, at: 1)
+    }
+    
+    func resetAllState() {
+        conductor.stop()
         
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        stopAll()
-    }
-    
-    @IBAction func goToSetting(_ sender: Any) {
-        let pvc = UIStoryboard(name: "Setting", bundle: nil)
-        let settingVC = pvc.instantiateViewController(withIdentifier: "setting")
-        self.navigationController?.pushViewController(settingVC, animated: true)
-    }
-    
-    @IBAction func startTuner(_ sender: Any) {
-        if !start {
-            self.conductor.start()
-            
-            UIAccessibility.post(notification: .announcement, argument: "Start plucking your guitar string.")
-            
-            start = true
-            startButton.setTitle("Stop", for: .normal)
-            differenceLabel.isHidden = false
-            
-            startTimer()
-            
-        } else {
-            stopAll()
-        }
-    }
-    
-    func stopAll() {
-        self.conductor.stop()
-        
-        //Reset all elements to inital state
+        //Reset all elements to its inital state
         timer1?.invalidate()
         timer2?.invalidate()
         setDefaultButton()
         selectedString = ""
-        statusLabel.text = "Tap the start button to start tuning"
-        indicatorCircle?.position = CGPoint(x: 0, y: 0)
-        startButton.setTitle("Start", for: .normal)
-        start = false
+        tunerStatus = .initial
+        indicatorCircleShapeLayer.fillColor = UIColor.ColorLibrary.yellowAccent.cgColor
+        indicatorCircleShapeLayer.position = CGPoint(x: 0, y: 0)
+        startButton.setTitle(NSLocalizedString("automaticTuner.button-start.title", comment: ""), for: .normal)
+        isStarted = false
         differenceLabel.isHidden = true
-    }
-    
-    @IBAction func buttonSelected(_ sender: UIButton) {
-        
-        setDefaultButton()
-        
-        let setFrequency = NoteFrequency.allCases[sender.tag]
-        conductor.noteFrequency = setFrequency.rawValue
-        sender.backgroundColor = .ColorLibrary.yellowAccent
     }
     
     func tunerDidMeasure(pitch: Float, amplitude: Float, target: Float) {
         
-        let freqGap: Float = pitch - target
-        let errorDiff: Float = target * 0.5
-        let frame = self.view.frame.width / 2
-        var position = CGPoint()
-        
-        //Update highlight button to match the string target
+        // Update highlight button to match the string target
         updateButton(target: target)
         
-        if abs(freqGap) < errorDiff { //Target note is pretty close
-            let mappedPos = map(minRange: Int(target - errorDiff), maxRange: Int(target + errorDiff), minDomain: Int(-frame), maxDomain: Int(frame), value: Int(pitch))
-            position = CGPoint(x: mappedPos, y: 0)
-            
-            if abs(freqGap) < target * 0.005 {
-                
-                statusLabel.text = "Hold"
-                indicatorCircle?.fillColor = UIColor.systemGreen.cgColor
-                
-            } else {
-                
-                if selectedString != "" {
-                    statusLabel.text = freqGap > 0 ? (selectedString + " is too sharp, tune it down") : (selectedString + " is to flat, tune it up")
-                } else {
-                    statusLabel.text = ""
-                }
-                
-                indicatorCircle?.fillColor = UIColor.ColorLibrary.yellowAccent.cgColor
-            }
-        } else { //Target note is much lower or larger
-
-            indicatorCircle?.fillColor = UIColor.ColorLibrary.orangeAccent.cgColor
-            position = freqGap > 0 ? CGPoint(x: frame, y: 0) : CGPoint(x: -frame, y: 0)
-            if selectedString != "" {
-                statusLabel.text = freqGap > 0 ? (selectedString + " is too sharp, tune it down") : (selectedString + " is to flat, tune it up")
-            } else {
-                statusLabel.text = ""
-            }
-        }
+        // TODO: - Consider to store the frame properties into constant
+        viewModel.tunerDidMeasure(pitch: pitch, amplitude: amplitude, target: target, frame: Float(view.bounds.width / 2))
         
-        let diff = (round(100*freqGap))/100
-        differenceLabel.text = "\(diff)"
-        indicatorCircle?.position = position
-        
-    }
-    
-    func map(minRange: Int, maxRange: Int, minDomain: Int, maxDomain: Int, value: Int) -> Int {
-        return minDomain + (maxDomain - minDomain) * (value - minRange) / (maxRange - minRange)
     }
     
     func updateButton(target: Float) {
-        if target == NoteFrequency.string1.rawValue {
-            buttonSelected(strings[0])
-            selectedString = "E string"
-        }
-        if target == NoteFrequency.string2.rawValue {
-            buttonSelected(strings[1])
-            selectedString = "B string"
-        }
-        if target == NoteFrequency.string3.rawValue {
-            buttonSelected(strings[2])
-            selectedString = "G string"
-        }
-        if target == NoteFrequency.string4.rawValue {
-            buttonSelected(strings[3])
-            selectedString = "D string"
-        }
-        if target == NoteFrequency.string5.rawValue {
-            buttonSelected(strings[4])
-            selectedString = "A string"
-        }
-        if target == NoteFrequency.string6.rawValue {
-            buttonSelected(strings[5])
-            selectedString = "E string"
+        for (index, item) in NoteFrequency.allCases.enumerated() where target == NoteFrequency.allCases[index].rawValue {
+            buttonSelected(stringButtons[index])
+            selectedString = item.stringValue
         }
     }
     
     func setDefaultButton() {
-        //Set button color on the stack view
-        strings.forEach({$0.backgroundColor = .ColorLibrary.whiteAccent})
+        // Set button color on the stack view
+        stringButtons.forEach({ $0.backgroundColor = .ColorLibrary.whiteAccent })
+    }
+}
+
+extension AutomaticTunerViewController: AutomaticTunerViewModelAction {
+    func tunerResultMatch() {
+        tunerStatus = .analyzing
+        indicatorCircleShapeLayer.fillColor = UIColor.systemGreen.cgColor
     }
     
-    func startTimer() {
-        timer1 = Timer.scheduledTimer(withTimeInterval: 4.0, repeats: true) { _ in
-            if (self.tempKey == self.newKey) {
-                UIAccessibility.post(notification: .announcement, argument: self.statusLabel.text)
-            }
-        }
-        timer2 = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            if (self.tempKey == self.newKey) && self.tempKey == "Hold" {
-                self.statusLabel.text = self.selectedString + " is tuned in!"
-                self.checkTuneStatus()
-            }
+    func tunerResultClose() {
+        indicatorCircleShapeLayer.fillColor = UIColor.ColorLibrary.yellowAccent.cgColor
+    }
+    
+    func tunerResultFar() {
+        indicatorCircleShapeLayer.fillColor = UIColor.ColorLibrary.orangeAccent.cgColor
+    }
+    
+    func shouldUpdateLabel(with freqGap: Float) {
+        if selectedString.isNotEmpty {
+            tunerStatus = freqGap > 0 ? .tooSharp : .tooFlat
+        } else {
+            tunerStatus = .idle
         }
     }
     
-    @objc func checkTuneStatus() {
-        if statusLabel.text == selectedString + " is tuned in!" {
-            timer1?.invalidate()
-            timer2?.invalidate()
-            startTimer()
-        }
-        UIAccessibility.post(notification: .announcement, argument: statusLabel.text)
+    func updateIndicatorPosition(position: Float, difference: Float) {
+        differenceLabel.text = "\(difference)"
+        indicatorCircleShapeLayer.position = CGPoint(x: CGFloat(position), y: .zero)
     }
 }

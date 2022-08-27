@@ -80,8 +80,7 @@ class ChordVoiceViewController: UIViewController {
     }
     
     @IBAction func goToSetting(_ sender: Any) {
-        let pvc = UIStoryboard(name: "Setting", bundle: nil)
-        let settingVC = pvc.instantiateViewController(withIdentifier: "setting")
+        let settingVC = SettingViewController(settingVM: SettingViewModel())
         self.navigationController?.pushViewController(settingVC, animated: true)
     }
     

@@ -28,7 +28,11 @@ class ChordPickerViewController: UIViewController {
         } catch {
             print("Error")
         }
-        self.tabBarController?.tabBar.isHidden = false
+        tabBarController?.tabBar.isHidden = false
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = false
     }
     
     override func viewDidLoad() {

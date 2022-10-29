@@ -43,6 +43,10 @@ class ChordVoiceViewController: UIViewController {
         tabBarController?.tabBar.isHidden = false
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = false
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initializeInherentProperties()

@@ -692,8 +692,7 @@ class ChordDetailViewController: UIViewController {
     @objc func addTapped(){
         goToSetting = true
         
-        let pvc = UIStoryboard(name: "Setting", bundle: nil)
-        let settingVC = pvc.instantiateViewController(withIdentifier: "setting")
+        let settingVC = SettingViewController(settingVM: SettingViewModel())
         self.navigationController?.pushViewController(settingVC, animated: true)
     }
     

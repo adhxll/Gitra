@@ -40,6 +40,7 @@ class ChordVoiceViewController: UIViewController {
             print("Error")
         }
         changeLblResult(to: "Tap the icon to start..")
+        tabBarController?.tabBar.isHidden = false
     }
     
     override func viewDidLoad() {

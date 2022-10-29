@@ -12,7 +12,7 @@ import Lottie
 import Foundation
 import Combine
 
-class ChordDetailViewModel{
+class ChordDetailViewModel {
     var countFinger = 0
     var strings = [0,0,0,0,0,0] //0 is open and -1 is dead
     var fingering = [0,0,0,0,0,0] //-1 means no fingers are there

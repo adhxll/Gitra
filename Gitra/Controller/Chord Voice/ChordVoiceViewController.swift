@@ -9,30 +9,29 @@ import UIKit
 import Speech
 import Lottie
 import AVFoundation
+import Combine
 
 class ChordVoiceViewController: UIViewController {
+    
+    var viewModel = ChordVoiceViewModel()
     
     @IBOutlet weak var textLogo: UIImageView!
     @IBOutlet weak var imageTap: UIImageView!
     @IBOutlet weak var lblResult: UILabel!
     @IBOutlet weak var lblWhich: UILabel!
     
+    
     //MARK: - Local Properties
-    let audioEngine = AVAudioEngine()
-    let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer()
-    var request = SFSpeechAudioBufferRecognitionRequest()
-    var task: SFSpeechRecognitionTask!
     var isStart: Bool = false
     let animationView = AnimationView()
     let defaults = UserDefaults.standard
+    var chordToResponse = ""
     
-    //Audio
-    var player: AVAudioPlayer?
-    
-    //Timer
-    var timer: Timer?
-    
-    let speechSynthesizer = AVSpeechSynthesizer()
+    //Subscriber
+    var chordResultSubscriber: AnyCancellable?
+    var chordFoundSubscriber: AnyCancellable?
+    var alertMessageSubscriber: AnyCancellable?
+    var speechRegSubscriber: AnyCancellable?
     
     override func viewWillAppear(_ animated: Bool) {
         do {
@@ -40,61 +39,100 @@ class ChordVoiceViewController: UIViewController {
         } catch {
             print("Error")
         }
-        
-        self.tabBarController?.tabBar.isHidden = false
-        
-        lblResult.text = "Say Something..."
+        changeLblResult(to: "Tap the icon to start..")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        UINavigationBar.appearance().isTranslucent = false
-        navigationController?.navigationBar.shadowImage = UIImage()
-        self.extendedLayoutIncludesOpaqueBars = false
-        self.tabBarController?.tabBar.isHidden = false
-//        checkDefault()
-        
-        // Do any additional setup after loading the view.
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
-        imageTap.isUserInteractionEnabled = true
-        imageTap.addGestureRecognizer(tapGestureRecognizer)
-        
+        initializeInherentProperties()
+        initializeImageTap()
         requestPermission()
-        
-        textLogo.isAccessibilityElement = true
-        textLogo.accessibilityHint = "Which chord do you want to play? Please tap twice the The Guitar Image Below. Please wait the Siri Voice done, then input the chord by your voice, and wait 5 second to know the feedback chord"
-        
-        imageTap.isAccessibilityElement = true
-        imageTap.accessibilityLabel = "Guitar icon, tap twice"
-        
-        lblWhich.isAccessibilityElement = false
+        initializeTextLogo()
+        initializeLblWhich()
+        initializeSubscribers()
         
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        request.endAudio()
-        audioEngine.stop()
-        audioEngine.inputNode.removeTap(onBus: 0)
-        cancelSpeechRecognitization()
+        viewModel.killAudioEngine()
+        hideAnimation()
     }
     
-    @IBAction func goToSetting(_ sender: Any) {
-        let pvc = UIStoryboard(name: "Setting", bundle: nil)
-        let settingVC = pvc.instantiateViewController(withIdentifier: "setting")
-        self.navigationController?.pushViewController(settingVC, animated: true)
+    func initializeSubscribers(){
+        chordResultSubscriber = viewModel.$chordResult.sink(receiveValue: { result in
+            self.changeLblResult(to: result)
+        })
+        chordFoundSubscriber = viewModel.$chordFound.sink(receiveValue: { result in
+            if result {
+                self.viewModel.utter(text: self.lblResult.text ?? self.viewModel.chordResult)
+                self.pushToChordDetail()
+            }
+        })
+        alertMessageSubscriber = viewModel.$alertMessage.sink(receiveValue: { message in
+            if message != "" {
+                self.alertView(message: message)
+            }
+        })
+        speechRegSubscriber = viewModel.$isRecognizingSpeech.sink(receiveValue: { result in
+            if result{
+                self.startAnimation()
+                self.changeLblResult(to: "Say something...")
+            }else{
+                self.hideAnimation()
+            }
+        })
     }
     
-    func checkDefault() {
-        let value = defaults.integer(forKey: "inputMode")
-        if (value == 0) {
-            tabBarController?.viewControllers?.remove(at: 1)
-        } else {
-            tabBarController?.viewControllers?.remove(at: 0)
-        }
+    func initializeInherentProperties() {
+        UINavigationBar.appearance().isTranslucent = true
+        navigationController?.navigationBar.shadowImage = UIImage()
+        self.extendedLayoutIncludesOpaqueBars = true
+        self.tabBarController?.tabBar.isHidden = false
+        //        checkDefault()
     }
     
-    private func lottieAnimation(){
+    func initializeImageTap(){
+        // Do any additional setup after loading the view.
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(onImageTapped(tapGestureRecognizer:)))
+        imageTap.isUserInteractionEnabled = true
+        imageTap.addGestureRecognizer(tapGestureRecognizer)
+        imageTap.isAccessibilityElement = true
+        imageTap.accessibilityLabel = "Guitar icon, tap to begin"
+    }
+    
+    func initializeTextLogo() {
+        textLogo.isAccessibilityElement = true
+        textLogo.accessibilityHint = "Which chord do you want to play? Please tap the The Guitar Icon once then say the chord you would like to search and wait 5 seconds for the result."
+    }
+    
+    func initializeLblWhich(){
+        lblWhich.isAccessibilityElement = false
+    }
+    
+    func changeLblResult(to string:String) {
+        lblResult.text = string
+    }
+    
+    //    func checkDefault() {
+    //        let value = defaults.integer(forKey: "inputMode")
+    //        if (value == 0) {
+    //            tabBarController?.viewControllers?.remove(at: 1)
+    //        } else {
+    //            tabBarController?.viewControllers?.remove(at: 0)
+    //        }
+    //    }
+    
+    func startVoiceRecognition() {
+        viewModel.activateSpeechRecognition(utter: lblResult.text ?? "")
+    }
+    
+    func stopVoiceRecognition() {
+        viewModel.deactivateSpeechRecognitization()
+    }
+    
+    // lottie animation
+    private func startAnimation(){
+        viewModel.playSpeechRecognitionSoundIndicator()
         UIView.animate(withDuration: 0.5) {
             self.animationView.alpha = 1
         }
@@ -114,206 +152,78 @@ class ChordVoiceViewController: UIViewController {
         }
     }
     
-    private func playSound() {
-        guard let url = Bundle.main.path(forResource: "siri", ofType: "m4a") else {
-            print("URL not found")
-            return
-        }
-        
-        do {
-            try AVAudioSession.sharedInstance().setActive(true)
-            
-            try AVAudioSession.sharedInstance().setMode(AVAudioSession.Mode.default)
-            //try audioSession.setMode(AVAudioSessionModeMeasurement)
-            try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
-            try AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
-            
-            let backgroundMusic = NSURL(fileURLWithPath: url)
-            
-            player = try AVAudioPlayer(contentsOf: backgroundMusic as URL, fileTypeHint: AVFileType.m4a.rawValue)
-            
-            guard let player = player else {return}
-            
-            player.play()
-            
-        } catch let error {
-            print("Error ", error.localizedDescription)
-        }
-    }
-    
-    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-        
+    @objc func onImageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
         isStart = !isStart
-        
         if (isStart) {
             //Start with delay if voice over running
             if UIAccessibility.isVoiceOverRunning {
-                self.timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false, block: { (timer) in
+                viewModel.timer = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: false, block: { (timer) in
                     // Do whatever needs to be done when the timer expires
-                    self.playSound()
-                    self.lottieAnimation()
-                    self.speechRecognitionActive()
+                    self.startVoiceRecognition()
                 })
                 //Start immediately if no voice over detected
             } else {
-                self.playSound()
-                self.lottieAnimation()
-                self.speechRecognitionActive()
+                self.startVoiceRecognition()
             }
             
         } else {
-            cancelSpeechRecognitization()
-            hideAnimation()
+            stopVoiceRecognition()
         }
     }
     
-    private func speechRecognitionActive() {
-        let node = audioEngine.inputNode
-        let recordingFormat = node.outputFormat(forBus: 0)
-        
-        request = SFSpeechAudioBufferRecognitionRequest()
-        guard request == request else {
-            fatalError("Unable to Create SFSpeech Object")
-        }
-        
-        node.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer, _) in
-            self.request.append(buffer)
-        }
-        
-        audioEngine.prepare()
-        
-        do {
-            try audioEngine.start()
-        } catch {
-            alertView(message: "Error Start Audio Listener")
-        }
-        
-        guard let myRecognization = SFSpeechRecognizer() else {
-            self.alertView(message: "Recognization is now allow on your local")
-            
-            return
-        }
-        
-        if !myRecognization.isAvailable {
-            self.alertView(message: "Recognization is not available")
-        }
-        
-        task = speechRecognizer?.recognitionTask(with: request, resultHandler: { (result, error) in
-            
-            var isFinal = false
-            
-            if let result = result {
-                self.lblResult.text = result.bestTranscription.formattedString
-                // Should I compare the result here to see if it changed?
-                isFinal = result.isFinal
-            }
-            
-            if isFinal {
-                //  self.cancelSpeechRecognitization()
-                //                self.restartSpeechTimer()
-                //                print("ISFinal")
-            }
-            else if error == nil {
-                self.timer = Timer.scheduledTimer(withTimeInterval: 3.5, repeats: false, block: { (timer) in
-                    // Do whatever needs to be done when the timer expires
-                    self.cancelSpeechRecognitization()
-                    self.hideAnimation()
-                })
-            }
-        })
-        
-        if ( task.isFinishing == true) {
-            let text = lblResult.text
-            let _ = text?.split {
-                $0.isWhitespace
-            }.map {
-                String($0)
-            }
-        }
-    }
+}
+
+/// MARK: Permission, alerts
+extension ChordVoiceViewController {
     
-    var chordToResponse = ""
-    
-    var chordNameModel = ChordName()
-    
-    private func cancelSpeechRecognitization() {
-        
-        if ( task != nil) {
-            task.finish()
-            task.cancel()
-            task = nil
-            
-            let speechUtterance = AVSpeechUtterance(string: self.lblResult.text!)
-            
-            speechUtterance.voice = AVSpeechSynthesisVoice(language: "en-US")
-            speechUtterance.rate = AVSpeechUtteranceMaximumSpeechRate / 2.0
-            speechSynthesizer.speak(speechUtterance)
-            
-            //Call the API
-            let chord = self.lblResult.text
-            
-            guard let chordSave = chord else {return}
-            
-            chordNameModel = Helper().convertStringToParam(chord: chordSave)
-            
-            guard let chordURLParameterSave = chordNameModel.urlParameter else {
-                return
-            }
-            
-            //For Checking But Duplicate
-            DispatchQueue.global().async {
-                
-                self.task = nil
-                
-                NetworkManager().getSpecificChord(chord: chordURLParameterSave) { chordResult in
-                    
-                    DispatchQueue.main.async {
-                        self.performSegue(withIdentifier: "toChordDetail", sender: self)
-                    }
-                    
-                } completionFailed: { isFailed in
-                    
-                    let textFailed = "Chord not found, please input again"
-                    
-                    if ( isFailed == true) {
-                        
-                        let speechUtterance = AVSpeechUtterance(string: textFailed)
-                        
-                        speechUtterance.voice = AVSpeechSynthesisVoice(language: "en-US")
-                        speechUtterance.rate = AVSpeechUtteranceMaximumSpeechRate / 2.0
-                        self.speechSynthesizer.speak(speechUtterance)
-                        
-                        // Re-call
-                        DispatchQueue.main.async {
-                            self.timer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false, block: { (timer) in
-                                // Do whatever needs to be done when the timer expires
-                                self.playSound()
-                                self.lottieAnimation()
-                                self.speechRecognitionActive()
-                                
-                            })
-                        }
-                    }
+    private func requestPermission() {
+        SFSpeechRecognizer.requestAuthorization { (authState) in
+            OperationQueue.main.addOperation {
+                if authState == .authorized {
+                    print("Accepted")
+                } else if authState == .denied {
+                    self.alertView(message: "Denied")
+                } else if ( authState == .notDetermined) {
+                    self.alertView(message: "No Speech Recognition in user's phone")
+                } else if authState == .restricted {
+                    self.alertView(message: "Restricted")
                 }
             }
         }
-        
-        request.endAudio()
-        audioEngine.stop()
-        audioEngine.inputNode.removeTap(onBus: 0)
+    }
+    
+    private func alertView(message: String) {
+        let alert = UIAlertController.init(title: "Error occured...!", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (_) in
+            alert.dismiss(animated: true, completion: nil)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+}
+
+/// MARK: Navigation
+extension ChordVoiceViewController {
+    
+    func pushToChordDetail() {
+        self.performSegue(withIdentifier: "toChordDetail", sender: self)
+    }
+    
+    @IBAction func goToSetting(_ sender: Any) {
+        let settingVC = SettingViewController(settingVM: SettingViewModel())
+        self.navigationController?.pushViewController(settingVC, animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        guard let chordURLParameterSave = chordNameModel.urlParameter else {
+        guard let chordURLParameterSave = viewModel.chordNameModel.urlParameter else {
             return
         }
         
         if segue.identifier == "toChordDetail" {
             let destination = segue.destination as? ChordDetailViewController
-            destination?.selectedChord = self.chordNameModel
+            destination?.selectedChord = viewModel.chordNameModel
             destination?.senderPage = 0
-            print(self.chordNameModel)
+            print(viewModel.chordNameModel)
             
             DispatchQueue.global().async {
                 NetworkManager().getSpecificChord(chord:chordURLParameterSave) { model in
@@ -325,32 +235,6 @@ class ChordVoiceViewController: UIViewController {
                 }
             }
         }
-    }
-    
-    private func requestPermission() {
-        SFSpeechRecognizer.requestAuthorization { (authState) in
-            OperationQueue.main.addOperation {
-                if authState == .authorized {
-                    print("Accepted")
-                } else if authState == .denied {
-                    self.alertView(message: "Denied")
-                } else if ( authState == .notDetermined) {
-                    self.alertView(message: "In User phone There's no Speech Recog")
-                } else if authState == .restricted {
-                    self.alertView(message: "Restricted")
-                }
-            }
-        }
-    }
-    
-    private func alertView(message: String) {
-        let controller = UIAlertController.init(title: "Error ocured...!", message: message, preferredStyle: .alert)
-        
-        controller.addAction(UIAlertAction(title: "OK", style: .default, handler: { (_) in
-            controller.dismiss(animated: true, completion: nil)
-        }))
-        
-        self.present(controller, animated: true, completion: nil)
     }
     
     @IBAction func unwindToVoice(_ sender: UIStoryboardSegue) {

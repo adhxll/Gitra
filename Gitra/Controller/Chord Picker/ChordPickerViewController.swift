@@ -35,6 +35,7 @@ class ChordPickerViewController: UIViewController {
         super.viewDidLoad()
         self.tabBarController?.tabBar.isHidden = false
         self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.extendedLayoutIncludesOpaqueBars = true
 
         chordPicker.dataSource = self
         chordPicker.delegate = self
@@ -73,10 +74,9 @@ class ChordPickerViewController: UIViewController {
             self.hidesBottomBarWhenPushed = true
         }
     }
- 
+    
     @IBAction func goToSetting(_ sender: Any) {
-        let pvc = UIStoryboard(name: "Setting", bundle: nil)
-        let settingVC = pvc.instantiateViewController(withIdentifier: "setting")
+        let settingVC = SettingViewController(settingVM: SettingViewModel())
         self.navigationController?.pushViewController(settingVC, animated: true)
     }
     
